@@ -1,11 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom'
+import useAuthStore from '../store/authStore'
 import './styles/Navbar.css'
 
 export default function Navbar() {
   const navigate = useNavigate()
+  const { token, clearAuth } = useAuthStore()
 
-  // TODO: replace with real auth state from store
-  const isLoggedIn = true
+  const handleLogout = () => {
+    clearAuth()
+    navigate('/login')
+  }
 
   return (
     <nav className="navbar">
@@ -25,8 +29,8 @@ export default function Navbar() {
           </svg>
         </button>
 
-        {isLoggedIn ? (
-          <button className="navbar__btn-outline" onClick={() => navigate('/login')}>
+        {token ? (
+          <button className="navbar__btn-outline" onClick={handleLogout}>
             Logout
           </button>
         ) : (
