@@ -3,7 +3,7 @@ import './styles/SubNavbar.css'
 
 const PAGE_TITLES = {
   '/dashboard': 'Dashboard',
-  // add more as you build pages
+  '/profile':   'Profile',
 }
 
 export default function SubNavbar({ isOpen, onToggle }) {
@@ -13,7 +13,6 @@ export default function SubNavbar({ isOpen, onToggle }) {
   return (
     <div className={`sub-navbar ${isOpen ? 'sub-navbar--shifted' : ''}`}>
 
-      {/* Toggle button */}
       <button
         className={`sub-navbar__toggle ${isOpen ? 'sub-navbar__toggle--open' : ''}`}
         onClick={onToggle}
@@ -35,7 +34,6 @@ export default function SubNavbar({ isOpen, onToggle }) {
 
       <div className="sub-navbar__divider" />
 
-      {/* Page title */}
       <span className="sub-navbar__page-title">{title}</span>
 
     </div>

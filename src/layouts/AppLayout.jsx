@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import SubNavbar from '../components/SubNavbar'
 import Sidebar from '../components/Sidebar'
-import Footer from '../components/Footer'
 import './styles/AppLayout.css'
 
 const SIDEBAR_KEY = 'migfora_sidebar_open'
@@ -58,9 +57,9 @@ export default function AppLayout({ children }) {
       {children}
     </main>
 
-    <footer className={`app-layout__footer-wrapper ${sidebarOpen ? 'app-layout__footer-wrapper--shifted' : ''}`}>
+    {/* <footer className={`app-layout__footer-wrapper ${sidebarOpen ? 'app-layout__footer-wrapper--shifted' : ''}`}>
       <Footer />
-    </footer>
+    </footer> */}
     </div>
   )
 }

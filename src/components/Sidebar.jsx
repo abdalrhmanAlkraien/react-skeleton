@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import SidebarProfile from './profile/SidebarProfile'
 import './styles/Sidebar.css'
 
 const NAV_ITEMS = [
@@ -25,17 +26,14 @@ export default function Sidebar({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Panel */}
       <aside className={`sidebar ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
 
-        {/* Header — Logo only, no close button */}
         <div className="sidebar__header">
           <span className="sidebar__logo">
             MIG<span className="sidebar__logo-accent">FORA</span>
           </span>
         </div>
 
-        {/* Nav — no onClose on click */}
         <nav className="sidebar__nav">
           {NAV_ITEMS.map((item) => (
             <NavLink
@@ -51,9 +49,11 @@ export default function Sidebar({ isOpen, onClose }) {
           ))}
         </nav>
 
-        {/* Footer */}
-        <div className="sidebar__footer">
-          © {new Date().getFullYear()} MIGFORA
+        <div className="sidebar__bottom">
+          <SidebarProfile />
+          <div className="sidebar__footer">
+            © {new Date().getFullYear()} MIGFORA
+          </div>
         </div>
 
       </aside>

@@ -1,0 +1,114 @@
+.profile {
+  padding: 32px;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+.profile__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.profile__title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  color: var(--color-navy);
+  margin: 0 0 6px 0;
+}
+
+.profile__subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.profile__edit-btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-navy);
+  background-color: var(--color-orange);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile__edit-btn:hover {
+  background-color: var(--color-orange-2);
+}
+
+/* ─── Card ───────────────────────────────────────────────── */
+.profile__card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.profile__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--color-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile__name {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.profile__email {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #6B7280;
+}
+
+/* ─── Package Badge ──────────────────────────────────────── */
+.profile__badge {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-white);
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+.profile__badge--basic {
+  background-color: #6B7280;
+}
+
+.profile__badge--growth {
+  background-color: #3B82F6;
+}
+
+.profile__badge--enterprise {
+  background-color: #7C3AED;
+}

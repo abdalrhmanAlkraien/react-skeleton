@@ -4,16 +4,15 @@ import AuthLayout from '../layouts/AuthLayout'
 import AppLayout from '../layouts/AppLayout'
 import ProtectedRoute from './ProtectedRoute'
 import Login from '../pages/Login'
-import Dashboard from '../pages/Dashboard'
 import Register from '../pages/Register'
-
+import Dashboard from '../pages/Dashboard'
+import Profile from '../pages/Profile'
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Public routes — Auth layout */}
         <Route path="/login" element={
           <AuthLayout>
             <Login />
@@ -26,7 +25,6 @@ export default function AppRoutes() {
           </AuthLayout>
         }/>
 
-        {/* Protected routes — App layout */}
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <AppLayout>
@@ -35,7 +33,14 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }/>
 
-        {/* Fallback */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Profile />
+            </AppLayout>
+          </ProtectedRoute>
+        }/>
+
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
 
       </Routes>

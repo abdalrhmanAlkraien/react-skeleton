@@ -112,3 +112,7 @@
 .sub-navbar--shifted {
   left: var(--sidebar-width);
 }
+
+.sidebar__bottom {
+  margin-top: auto;
+}

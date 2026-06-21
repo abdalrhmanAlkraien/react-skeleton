@@ -1,6 +1,6 @@
 .footer {
   background-color: var(--color-darkest);
-  color: var(--color-off-white);
+  color: var(--color-orange);
   padding: 24px 32px;
   display: flex;
   align-items: center;
@@ -13,6 +13,7 @@
 .footer__brand {
   font-family: var(--font-heading);
   font-weight: 700;
+  color: var(--color-orange);
 }
 
 .footer__accent {
