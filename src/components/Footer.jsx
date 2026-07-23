@@ -9,9 +9,7 @@ export default function Footer() {
           MIG<span className="footer__accent">FORA</span>
         </span>
       </span>
-      <span className="footer__tagline">
-        Cloud & Technology Solutions
-      </span>
+      <span className="footer__tagline">...</span>
     </footer>
   )
 }

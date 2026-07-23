@@ -16,7 +16,7 @@ const AVATAR_COLOR_CLASS = {
   '#7C3AED': 'sidebar-profile__avatar--purple',
 }
 
-export default function SidebarProfile() {
+export default function SidebarProfile({ isOpen }) {
   const { user } = useAuthStore()
   const navigate = useNavigate()
   const [profile, setProfile] = useState(null)
@@ -37,9 +37,12 @@ export default function SidebarProfile() {
   const avatarClass = AVATAR_COLOR_CLASS[avatarColor]   || 'sidebar-profile__avatar--orange'
 
   return (
-    <div className="sidebar-profile" onClick={() => navigate('/profile')}>
-
-      {packageLabel && (
+    <div
+      className={`sidebar-profile ${!isOpen ? 'sidebar-profile--rail' : ''}`}
+      onClick={() => navigate('/profile')}
+      title={!isOpen ? displayName : undefined}
+    >
+      {isOpen && packageLabel && (
         <div className={`sidebar-profile__badge ${badgeClass}`}>
           {packageLabel}
         </div>
@@ -49,13 +52,16 @@ export default function SidebarProfile() {
         <div className={`sidebar-profile__avatar ${avatarClass}`}>
           {initial}
         </div>
-        <div className="sidebar-profile__info">
-          <span className="sidebar-profile__name">{displayName}</span>
-          <span className="sidebar-profile__email">{displayEmail}</span>
-        </div>
-        <div className="sidebar-profile__arrow">›</div>
+        {isOpen && (
+          <>
+            <div className="sidebar-profile__info">
+              <span className="sidebar-profile__name">{displayName}</span>
+              <span className="sidebar-profile__email">{displayEmail}</span>
+            </div>
+            <div className="sidebar-profile__arrow">›</div>
+          </>
+        )}
       </div>
-
     </div>
   )
 }

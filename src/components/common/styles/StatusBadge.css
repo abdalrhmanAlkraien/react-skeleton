@@ -72,3 +72,15 @@
   border-color:     rgba(124, 58, 237, 0.2);
   color:            #7c3aed;
 }
+
+[data-theme="dark"] .status-badge--neutral {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color:     rgba(255, 255, 255, 0.12);
+  color:            rgba(240, 244, 248, 0.5);
+}
+
+[data-theme="dark"] .status-badge--package-basic {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color:     rgba(255, 255, 255, 0.12);
+  color:            rgba(240, 244, 248, 0.5);
+}

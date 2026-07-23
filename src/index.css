@@ -1,42 +1,99 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
+html, body {
+  margin:  0;
   padding: 0;
+  height:  100%;
 }
 
 :root {
-  /* Primary */
-  --color-navy:        #0D1B2A;
-  --color-orange:      #FF9900;
-  --color-white:       #FFFFFF;
-  --color-off-white:   #F8F9FB;
+  /* existing brand colors stay */
+  --color-orange:       #FF9900;
+  --color-orange-2:     #FFB347;
+  --color-navy:         #0D1B2A;
+  --color-navy-2:       #162233;
+  --color-navy-3:       #1E2D40;
+  --color-darkest:      #080F18;
+  --color-white:        #FFFFFF;
+  --color-off-white:    #F8F9FB;
 
-  /* Supporting */
-  --color-navy-2:      #162233;
-  --color-navy-3:      #1E2D40;
-  --color-orange-2:    #FFB347;
-  --color-darkest:     #080F18;
+  /* semantic variables — these are what Sidebar.css uses */
+  --bg-app:             #F0F2F5;
+  --bg-surface:         #FFFFFF;
+  --bg-surface-2:       #F8F9FB;
+  --bg-sidebar:         #FFFFFF;
+  --bg-navbar:          #FFFFFF;
 
-  /* Typography */
+  --border-color:       rgba(13, 27, 42, 0.08);
+  --border-color-2:     rgba(13, 27, 42, 0.14);
+
+  --text-primary:       #0D1B2A;
+  --text-secondary:     rgba(13, 27, 42, 0.5);
+  --text-muted:         rgba(13, 27, 42, 0.35);
+
+  --shadow-navbar:      0 1px 0 rgba(13, 27, 42, 0.08);
+  --shadow-sidebar:     2px 0 16px rgba(13, 27, 42, 0.06);
+
+  --nav-link-hover-bg:  rgba(13, 27, 42, 0.05);
+  --nav-link-active-bg: rgba(255, 153, 0, 0.1);
+  --nav-link-active-color: var(--color-orange);
+
   --font-heading: 'Syne', Arial Black, sans-serif;
   --font-body:    'DM Sans', Calibri, sans-serif;
 
-  /* Layout */
-  --navbar-height:        64px;
-  --subnavbar-height:     40px;
-  --sidebar-width:        260px;
-  --sidebar-toggle-size:  40px;
+  --navbar-height:  56px;
+  --sidebar-width:  248px;
+
+  --auth-card-bg:       #FFFFFF;
+--auth-card-border:   rgba(13, 27, 42, 0.1);
+--auth-input-bg:      #F4F5F7;
+--auth-input-bg-focus: #FFFFFF;
+--auth-input-border:  rgba(13, 27, 42, 0.12);
+--auth-text-primary:  #0D1B2A;
+--auth-text-secondary: rgba(13, 27, 42, 0.6);
+--auth-text-muted:    rgba(13, 27, 42, 0.4);
+
+}
+
+[data-theme="dark"] {
+  --bg-app:             #0D1B2A;
+  --bg-surface:         #162233;
+  --bg-surface-2:       #1E2D40;
+  --bg-sidebar:         #111C29;
+  --bg-navbar:          #111C29;
+
+  --border-color:       rgba(255, 255, 255, 0.07);
+  --border-color-2:     rgba(255, 255, 255, 0.1);
+
+  --text-primary:       #F0F4F8;
+  --text-secondary:     rgba(255, 153, 0, 0.75);
+  --text-muted:         rgba(255, 153, 0, 0.5);
+
+  --shadow-navbar:      0 1px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sidebar:     2px 0 16px rgba(0, 0, 0, 0.3);
+
+  --nav-link-hover-bg:  rgba(255, 255, 255, 0.06);
+  --nav-link-active-bg: rgba(255, 153, 0, 0.12);
+  --nav-link-active-color: var(--color-orange);
+
+  --auth-card-bg:        #162233;
+--auth-card-border:    rgba(255, 255, 255, 0.08);
+--auth-input-bg:       rgba(255, 255, 255, 0.06);
+--auth-input-bg-focus: rgba(255, 255, 255, 0.09);
+--auth-input-border:   rgba(255, 255, 255, 0.1);
+--auth-text-primary:   #F0F4F8;
+--auth-text-secondary: rgba(255, 255, 255, 0.6);
+--auth-text-muted:     rgba(255, 255, 255, 0.35);
 }
 
 body {
-  min-height: 100vh;
-  font-family: var(--font-body);
-  font-weight: 300;
-  background-color: var(--color-off-white);
-  color: var(--color-navy);
+  min-height:       100vh;
+  font-family:      var(--font-body);
+  font-weight:      300;
+  background-color: var(--bg-app);
+  color:            var(--text-primary);
+  transition:       background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
+  font-family:    var(--font-heading);
   letter-spacing: 0.02em;
 }

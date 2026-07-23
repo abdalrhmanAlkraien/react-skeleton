@@ -29,8 +29,14 @@
   border-right-color: rgba(13, 27, 42, 0.15);
 }
 
+[data-theme="dark"] .spinner--navy {
+  border-top-color:   var(--color-orange);
+  border-right-color: rgba(255, 153, 0, 0.2);
+}
+
 /* ─── Animation ───────────────────────────────────────────── */
 
 @keyframes spinner-spin {
   to { transform: rotate(360deg); }
 }
+

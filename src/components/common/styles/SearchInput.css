@@ -57,3 +57,31 @@
 .search-input__clear:hover {
   color: var(--color-navy);
 }
+
+
+[data-theme="dark"] .search-input__field {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color:     rgba(255, 255, 255, 0.1);
+  color:            var(--text-primary);
+}
+
+[data-theme="dark"] .search-input__field:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color:     var(--color-orange);
+}
+
+[data-theme="dark"] .search-input__icon {
+  color: rgba(255, 153, 0, 0.5);
+}
+
+[data-theme="dark"] .search-input__clear {
+  color: rgba(255, 153, 0, 0.5);
+}
+
+[data-theme="dark"] .search-input__clear:hover {
+  color: var(--color-orange);
+}
+
+[data-theme="dark"] .search-input__field::placeholder {
+  color: rgba(255, 153, 0, 0.4);
+}

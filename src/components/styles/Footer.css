@@ -1,19 +1,21 @@
 .footer {
-  background-color: var(--color-darkest);
-  color: var(--color-orange);
-  padding: 24px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 300;
+  background-color: var(--bg-surface);
+  color:            var(--color-orange);
+  padding:          20px 32px;
+  display:          flex;
+  align-items:      center;
+  justify-content:  space-between;
+  font-family:      var(--font-body);
+  font-size:        12px;
+  font-weight:      400;
+  border-top:       1px solid var(--border-color);
+  transition:       background-color 0.2s ease;
 }
 
 .footer__brand {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--color-orange);
+  color:       var(--color-orange);
 }
 
 .footer__accent {
@@ -21,5 +23,5 @@
 }
 
 .footer__tagline {
-  color: var(--color-navy-3);
+  color: var(--text-muted);
 }

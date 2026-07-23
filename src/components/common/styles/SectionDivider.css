@@ -1,22 +1,26 @@
 .section-divider {
-  display: flex;
+  display:     flex;
   align-items: center;
-  gap: 12px;
-  margin: 28px 0 16px;
+  gap:         12px;
+  margin:      28px 0 16px;
 }
 
 .section-divider__label {
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-family:    var(--font-heading);
+  font-size:      0.75rem;
+  font-weight:    700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(13, 27, 42, 0.35);
-  white-space: nowrap;
+  color:          var(--color-orange);
+  white-space:    nowrap;
 }
 
 .section-divider__line {
-  flex: 1;
-  height: 1px;
-  background: rgba(13, 27, 42, 0.08);
+  flex:       1;
+  height:     1px;
+  background: var(--border-color);
+}
+
+[data-theme="dark"] .section-divider__line {
+  background: rgba(255, 153, 0, 0.3);
 }
