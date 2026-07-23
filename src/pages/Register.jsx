@@ -4,6 +4,8 @@ import appConfig from '../config/appConfig'
 import { registerApi } from '../api/auth'
 import './styles/Register.css'
 import './styles/Login.css'
+import FormAlert from '../components/common/FormAlert'
+import FormField from '../components/common/FormField'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -31,7 +33,6 @@ export default function Register() {
     setError('')
     setSuccess('')
 
-    // Confirm password check
     if (form.password !== form.confirmPassword) {
       setError('Passwords do not match.')
       return
@@ -54,7 +55,6 @@ export default function Register() {
         res.data?.[appConfig.auth.messageKey] || 'Registration successful!'
       )
 
-      // Redirect to login after short delay
       setTimeout(() => navigate('/login'), 1500)
 
     } catch (err) {
@@ -70,7 +70,6 @@ export default function Register() {
   return (
     <div className="register-card">
 
-      {/* Logo */}
       <div className="register-card__logo">
         MIG<span>FORA</span>
       </div>
@@ -82,98 +81,81 @@ export default function Register() {
 
         {/* Row 1 — Full Name + Username */}
         <div className="register-card__row">
-          <div className="form-group">
-            <label className="form-label">Full Name</label>
-            <input
-              className="form-input"
-              type="text"
-              name="fullName"
-              placeholder="John Doe"
-              value={form.fullName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Username</label>
-            <input
-              className="form-input"
-              type="text"
-              name="username"
-              placeholder="johndoe"
-              value={form.username}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <FormField
+            label="Full Name"
+            name="fullName"
+            value={form.fullName}
+            onChange={handleChange}
+            placeholder="John Doe"
+            required
+          />
+          <FormField
+            label="Username"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            placeholder="johndoe"
+            required
+          />
         </div>
 
         {/* Row 2 — Email + Phone */}
         <div className="register-card__row">
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input
-              className="form-input"
-              type="email"
-              name="email"
-              placeholder="john@email.com"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Phone Number</label>
-            <input
-              className="form-input"
-              type="tel"
-              name="phone"
-              placeholder="+966 5X XXX XXXX"
-              value={form.phone}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <FormField
+            label="Email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="john@email.com"
+            required
+          />
+          <FormField
+            label="Phone Number"
+            name="phone"
+            type="tel"
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="+966 5X XXX XXXX"
+            required
+          />
         </div>
 
-        {/* Row 3 — Password + Confirm Password */}
+        {/* Row 3 — Password + Confirm */}
         <div className="register-card__row">
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <input
-              className="form-input"
-              type="password"
-              name="password"
-              placeholder="Min. 8 characters"
-              value={form.password}
-              onChange={handleChange}
-              required
-              minLength={8}
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Confirm Password</label>
-            <input
-              className="form-input"
-              type="password"
-              name="confirmPassword"
-              placeholder="Repeat password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <FormField
+            label="Password"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Min. 8 characters"
+            required
+            minLength={8}
+          />
+          <FormField
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            placeholder="Repeat password"
+            required
+          />
         </div>
 
-        {error   && <div className="form-error">{error}</div>}
-        {success && <div className="register-card__success">{success}</div>}
+        <FormAlert type="error"   message={error}   />
+        <FormAlert type="success" message={success} />
 
-        <button className="form-btn" type="submit" disabled={loading}>
-          {loading ? 'Creating account...' : 'Create Account'}
-        </button>
+        <FormButton
+          type="submit"
+          variant="primary"
+          loading={loading}
+          loadingText="Creating account…"
+          fullWidth
+        >
+          Create Account
+        </FormButton>
 
       </form>
 

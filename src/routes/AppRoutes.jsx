@@ -7,6 +7,7 @@ import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 import Profile from '../pages/Profile'
+import ComponentsPreview from '../pages/ComponentsPreview'
 
 export default function AppRoutes() {
   return (
@@ -37,6 +38,14 @@ export default function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <Profile />
+            </AppLayout>
+          </ProtectedRoute>
+        }/>
+
+        <Route path="/preview" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ComponentsPreview />
             </AppLayout>
           </ProtectedRoute>
         }/>

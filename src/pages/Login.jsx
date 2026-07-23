@@ -4,6 +4,9 @@ import appConfig from '../config/appConfig'
 import useAuthStore from '../store/authStore'
 import { loginApi } from '../api/auth'
 import './styles/Login.css'
+import FormButton from '../components/common/FormButton'
+import FormAlert from '../components/common/FormAlert'
+import FormField from '../components/common/FormField'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -67,35 +70,37 @@ export default function Login() {
 
       <form onSubmit={handleSubmit} className="login-card__form">
 
-        <div className="form-group">
-          <label className="form-label">{identifierLabel}</label>
-          <input
-            className="form-input"
-            type={identifierType}
-            placeholder={`Enter your ${identifierLabel.toLowerCase()}`}
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-          />
-        </div>
+        <FormField
+          label={identifierLabel}
+          name="identifier"
+          type={identifierType}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+          placeholder={`Enter your ${identifierLabel.toLowerCase()}`}
+          required
+        />
 
-        <div className="form-group">
-          <label className="form-label">Password</label>
-          <input
-            className="form-input"
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+        <FormField
+          label="Password"
+          name="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          required
+        />
 
-        {error && <div className="form-error">{error}</div>}
+        <FormAlert type="error" message={error} />
 
-        <button className="form-btn" type="submit" disabled={loading}>
-          {loading ? 'Signing in...' : 'Sign In'}
-        </button>
+        <FormButton
+          type="submit"
+          variant="primary"
+          loading={loading}
+          loadingText="Signing in…"
+          fullWidth
+        >
+          Sign In
+        </FormButton>
 
       </form>
 

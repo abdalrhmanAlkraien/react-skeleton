@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
 import './styles/Navbar.css'
+import FormButton from '../components/common/FormButton'
 
 export default function Navbar() {
   const navigate = useNavigate()
@@ -14,12 +15,10 @@ export default function Navbar() {
   return (
     <nav className="navbar">
 
-      {/* Left — Logo always visible */}
       <Link to="/dashboard" className="navbar__logo">
         MIG<span className="navbar__logo-accent">FORA</span>
       </Link>
 
-      {/* Right — Actions */}
       <div className="navbar__actions">
 
         <button className="navbar__icon-btn" title="Settings">
@@ -30,13 +29,13 @@ export default function Navbar() {
         </button>
 
         {token ? (
-          <button className="navbar__btn-outline" onClick={handleLogout}>
+          <FormButton variant="outline" onClick={handleLogout}>
             Logout
-          </button>
+          </FormButton>
         ) : (
-          <button className="navbar__btn-primary" onClick={() => navigate('/login')}>
+          <FormButton variant="primary" onClick={() => navigate('/login')}>
             Login
-          </button>
+          </FormButton>
         )}
 
       </div>

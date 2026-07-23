@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import SubNavbar from '../components/SubNavbar'
 import Sidebar from '../components/Sidebar'
 import './styles/AppLayout.css'
+import ToastRenderer from '../components/common/ToastRenderer'
 
 const SIDEBAR_KEY = 'migfora_sidebar_open'
 
@@ -60,6 +61,7 @@ export default function AppLayout({ children }) {
     {/* <footer className={`app-layout__footer-wrapper ${sidebarOpen ? 'app-layout__footer-wrapper--shifted' : ''}`}>
       <Footer />
     </footer> */}
+    <ToastRenderer />
     </div>
   )
 }

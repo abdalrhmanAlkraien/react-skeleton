@@ -1,0 +1,71 @@
+/* ─── Field wrapper ───────────────────────────────────────────────────────── */
+
+.form-field {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.form-field__label {
+  font-family:  var(--font-body);
+  font-size:    13px;
+  font-weight:  600;
+  color:        var(--color-navy);
+  display:      flex;
+  align-items:  center;
+  gap:          3px;
+}
+
+.form-field__required {
+  color:       var(--color-orange);
+  font-weight: 700;
+  font-size:   14px;
+  line-height: 1;
+}
+
+/* ─── Input ───────────────────────────────────────────────────────────────── */
+
+.form-field__input {
+  font-family:      var(--font-body);
+  font-size:        14px;
+  font-weight:      400;
+  color:            var(--color-navy);
+  background-color: var(--color-off-white);
+  border:           1px solid rgba(13, 27, 42, 0.15);
+  border-radius:    6px;
+  padding:          10px 14px;
+  outline:          none;
+  width:            100%;
+  transition:       border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field__input::placeholder {
+  color:   rgba(13, 27, 42, 0.35);
+  font-weight: 300;
+}
+
+.form-field__input:focus {
+  border-color: var(--color-orange);
+  box-shadow:   0 0 0 3px rgba(255, 153, 0, 0.12);
+}
+
+.form-field__input:disabled {
+  opacity: 0.55;
+  cursor:  not-allowed;
+}
+
+/* ─── Error state ─────────────────────────────────────────────────────────── */
+
+.form-field--error .form-field__input {
+  border-color: #DC2626;
+  box-shadow:   0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-field__error-msg {
+  font-family: var(--font-body);
+  font-size:   12px;
+  font-weight: 500;
+  color:       #DC2626;
+}

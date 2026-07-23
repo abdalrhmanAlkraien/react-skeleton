@@ -80,27 +80,6 @@
   color: #f87171;
 }
 
-.form-btn {
-  background-color: var(--color-orange);
-  color: var(--color-navy);
-  border: none;
-  border-radius: 8px;
-  padding: 13px;
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 4px;
-}
-
-.form-btn:hover:not(:disabled) { background-color: var(--color-orange-2); }
-
-.form-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .login-card__footer {
   font-family: var(--font-body);
   font-size: 13px;
