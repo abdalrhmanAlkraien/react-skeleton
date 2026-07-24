@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import {
     FormButton,
@@ -19,6 +20,7 @@ import {
 } from '../components/common'
 
 import './styles/ComponentsPreview.css'
+import useLanguageStore from '../store/useLanguageStore'
 
 const TABS = [
     { key: 'buttons', label: 'Buttons & Inputs' },
@@ -32,7 +34,8 @@ export default function ComponentsPreview() {
 
     // Tabs
     const [activeTab, setActiveTab] = useState('buttons')
-
+    const { t } = useTranslation()
+    const { lang } = useLanguageStore()
     // FormField
     const [textVal, setTextVal] = useState('')
     const [emailVal, setEmailVal] = useState('')
@@ -59,7 +62,7 @@ export default function ComponentsPreview() {
                 subtitle="Temporary page — verify design then delete."
                 action={
                     <FormButton variant="ghost" onClick={() => navigate('/dashboard')}>
-                        ← Back to Dashboard
+                        {lang === 'ar' ? '→' : '←'} {t('common.back')}
                     </FormButton>
                 }
             />

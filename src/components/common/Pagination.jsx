@@ -1,10 +1,15 @@
+import { useTranslation } from 'react-i18next'
 import './styles/Pagination.css'
 
-function Pagination({ page, totalPages, totalElements, itemLabel = 'items', onPageChange }) {
+function Pagination({ page, totalPages, totalElements, itemLabel = '', onPageChange }) {
+  const { t } = useTranslation()
+
   return (
     <div className="pagination">
       <span className="pagination__info">
-        {totalElements} {itemLabel} — Page {page + 1} of {totalPages || 1}
+        {t('common.items_count', { count: totalElements, label: itemLabel })}
+        {' — '}
+        {t('common.page_of', { current: page + 1, total: totalPages || 1 })}
       </span>
       <div className="pagination__controls">
         <button disabled={page === 0} onClick={() => onPageChange(page - 1)}>

@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { updateProfileApi } from '../../api/profile'
-import FormField from '../common/FormField'
-import FormAlert from '../common/FormAlert'
-import Drawer from '../common/Drawer'
-import FormButton from '../common/FormButton'
+import { FormField, FormButton, FormAlert, Drawer } from '../common'
 
 export default function ProfileDrawer({ isOpen, onClose, profile, onSave }) {
+  const { t } = useTranslation()
   const [form, setForm]       = useState({ name: '', email: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
@@ -24,27 +23,27 @@ export default function ProfileDrawer({ isOpen, onClose, profile, onSave }) {
   }
 
   const handleSubmit = () => {
-    if (!form.name.trim())  { setError('Name is required.');  return }
-    if (!form.email.trim()) { setError('Email is required.'); return }
+    if (!form.name.trim())  { setError(t('profile.name_required'));  return }
+    if (!form.email.trim()) { setError(t('profile.email_required')); return }
     setError('')
     setLoading(true)
     updateProfileApi(form)
-      .then((res) => { setSuccess('Profile updated successfully.'); setLoading(false); onSave(res.data) })
-      .catch(()   => { setError('Failed to update profile. Please try again.'); setLoading(false) })
+      .then((res) => { setSuccess(t('profile.save_success')); setLoading(false); onSave(res.data) })
+      .catch(()   => { setError(t('profile.save_failed')); setLoading(false) })
   }
 
   return (
     <Drawer
       open={isOpen}
-      title="Edit Profile"
+      title={t('profile.drawer_title')}
       onClose={onClose}
       size="sm"
       error={error}
       footer={
         <>
-          <FormButton variant="ghost" onClick={onClose} fullWidth>Cancel</FormButton>
-          <FormButton variant="primary" loading={loading} loadingText="Saving…" onClick={handleSubmit} fullWidth>
-            Save Changes
+          <FormButton variant="ghost" onClick={onClose} fullWidth>{t('common.cancel')}</FormButton>
+          <FormButton variant="primary" loading={loading} loadingText={t('common.saving')} onClick={handleSubmit} fullWidth>
+            {t('common.save')}
           </FormButton>
         </>
       }
@@ -52,24 +51,22 @@ export default function ProfileDrawer({ isOpen, onClose, profile, onSave }) {
       <FormAlert type="success" message={success} />
 
       <FormField
-        label="Name"
+        label={t('profile.name_label')}
         name="name"
         value={form.name}
         onChange={handleChange}
-        placeholder="Your full name"
+        placeholder={t('profile.name_placeholder')}
         required
       />
-
       <FormField
-        label="Email"
+        label={t('profile.email_label')}
         name="email"
         type="email"
         value={form.email}
         onChange={handleChange}
-        placeholder="Your email address"
+        placeholder={t('profile.email_placeholder')}
         required
       />
-
     </Drawer>
   )
 }

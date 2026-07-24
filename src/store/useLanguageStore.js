@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import i18n from '../i18n/index.js'
 
 const getInitialLang = () => {
   return localStorage.getItem('migfora_lang') || 'en'
@@ -8,6 +9,7 @@ const applyLang = (lang) => {
   document.documentElement.setAttribute('lang', lang)
   document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr')
   localStorage.setItem('migfora_lang', lang)
+  i18n.changeLanguage(lang)
 }
 
 const useLanguageStore = create((set) => {

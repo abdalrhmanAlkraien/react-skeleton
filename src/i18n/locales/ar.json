@@ -1,0 +1,120 @@
+{
+  "common": {
+    "loading": "جاري التحميل…",
+    "saving": "جاري الحفظ…",
+    "cancel": "إلغاء",
+    "save": "حفظ التغييرات",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "close": "إغلاق",
+    "edit": "تعديل",
+    "back": "رجوع",
+    "dismiss": "إغلاق",
+    "search": "بحث…",
+    "page_of": "صفحة {{current}} من {{total}}",
+    "items_count": "{{count}} {{label}}"
+  },
+  "navbar": {
+    "toggle_sidebar": "تبديل الشريط الجانبي",
+    "switch_light": "التبديل إلى الوضع الفاتح",
+    "switch_dark": "التبديل إلى الوضع الداكن",
+    "switch_arabic": "التبديل إلى العربية",
+    "switch_english": "التبديل إلى الإنجليزية",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول"
+  },
+  "sidebar": {
+    "copyright": "© {{year}} MIGFORA",
+    "nav": {
+      "dashboard": "لوحة التحكم"
+    }
+  },
+  "footer": {
+    "tagline": "حلول السحابة والتقنية"
+  },
+  "auth": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجّل دخولك للمتابعة",
+      "username_label": "اسم المستخدم",
+      "email_label": "البريد الإلكتروني",
+      "phone_label": "رقم الهاتف",
+      "password_label": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "submitting": "جاري تسجيل الدخول…",
+      "no_account": "ليس لديك حساب؟",
+      "create_one": "أنشئ حساباً",
+      "switch_dark": "التبديل إلى الوضع الداكن",
+      "switch_light": "التبديل إلى الوضع الفاتح"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "أدخل بياناتك للبدء",
+      "full_name": "الاسم الكامل",
+      "full_name_placeholder": "محمد عبدالله",
+      "username": "اسم المستخدم",
+      "username_placeholder": "mohammed99",
+      "email": "البريد الإلكتروني",
+      "email_placeholder": "john@email.com",
+      "phone": "رقم الهاتف",
+      "phone_placeholder": "+966 5X XXX XXXX",
+      "password": "كلمة المرور",
+      "password_placeholder": "8 أحرف على الأقل",
+      "confirm_password": "تأكيد كلمة المرور",
+      "confirm_password_placeholder": "أعد إدخال كلمة المرور",
+      "submit": "إنشاء الحساب",
+      "submitting": "جاري إنشاء الحساب…",
+      "has_account": "لديك حساب بالفعل؟",
+      "sign_in": "تسجيل الدخول",
+      "passwords_no_match": "كلمتا المرور غير متطابقتين.",
+      "success": "تم إنشاء الحساب بنجاح!",
+      "failed": "فشل إنشاء الحساب. يرجى المحاولة مرة أخرى."
+    }
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "subtitle": "بيانات حسابك وإعداداتك.",
+    "edit_btn": "تعديل الملف",
+    "drawer_title": "تعديل الملف الشخصي",
+    "name_label": "الاسم",
+    "name_placeholder": "اسمك الكامل",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "بريدك الإلكتروني",
+    "save_success": "تم تحديث الملف الشخصي بنجاح.",
+    "save_failed": "فشل تحديث الملف. يرجى المحاولة مرة أخرى.",
+    "name_required": "الاسم مطلوب.",
+    "email_required": "البريد الإلكتروني مطلوب."
+  },
+  "status": {
+    "DONE": "مكتمل",
+    "ACTIVE": "نشط",
+    "COMPLETED": "منتهي",
+    "PASSED": "ناجح",
+    "SCHEDULED": "مجدول",
+    "PENDING": "قيد الانتظار",
+    "RUNNING": "جارٍ",
+    "FAILED": "فشل",
+    "MISSED": "فائت",
+    "CRITICAL": "حرج",
+    "HIGH": "عالٍ",
+    "MEDIUM": "متوسط",
+    "LOW": "منخفض",
+    "DRAFT": "مسودة",
+    "UNKNOWN": "غير معروف",
+    "BASIC": "أساسي",
+    "GROWTH": "نمو",
+    "ENTERPRISE": "مؤسسي"
+  },
+  "confirm_dialog": {
+    "cancel": "إلغاء"
+  },
+  "errors": {
+    "login_failed": "فشل تسجيل الدخول. يرجى التحقق من بياناتك.",
+    "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  },
+  "not_found": {
+  "title": "الصفحة غير موجودة",
+  "subtitle": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+  "back_home": "العودة إلى لوحة التحكم"
+}
+}

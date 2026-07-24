@@ -1,0 +1,120 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "edit": "Edit",
+    "back": "Back",
+    "dismiss": "Dismiss",
+    "search": "Search…",
+    "page_of": "Page {{current}} of {{total}}",
+    "items_count": "{{count}} {{label}}"
+  },
+  "navbar": {
+    "toggle_sidebar": "Toggle sidebar",
+    "switch_light": "Switch to light mode",
+    "switch_dark": "Switch to dark mode",
+    "switch_arabic": "Switch to Arabic",
+    "switch_english": "Switch to English",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "sidebar": {
+    "copyright": "© {{year}} MIGFORA",
+    "nav": {
+      "dashboard": "Dashboard"
+    }
+  },
+  "footer": {
+    "tagline": "Cloud & Technology Solutions"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account to continue",
+      "username_label": "Username",
+      "email_label": "Email",
+      "phone_label": "Phone Number",
+      "password_label": "Password",
+      "submit": "Sign In",
+      "submitting": "Signing in…",
+      "no_account": "Don't have an account?",
+      "create_one": "Create one",
+      "switch_dark": "Switch to dark mode",
+      "switch_light": "Switch to light mode"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Fill in your details to get started",
+      "full_name": "Full Name",
+      "full_name_placeholder": "John Doe",
+      "username": "Username",
+      "username_placeholder": "johndoe",
+      "email": "Email",
+      "email_placeholder": "john@email.com",
+      "phone": "Phone Number",
+      "phone_placeholder": "+966 5X XXX XXXX",
+      "password": "Password",
+      "password_placeholder": "Min. 8 characters",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Repeat password",
+      "submit": "Create Account",
+      "submitting": "Creating account…",
+      "has_account": "Already have an account?",
+      "sign_in": "Sign in",
+      "passwords_no_match": "Passwords do not match.",
+      "success": "Registration successful!",
+      "failed": "Registration failed. Please try again."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Your account details and settings.",
+    "edit_btn": "Edit Profile",
+    "drawer_title": "Edit Profile",
+    "name_label": "Name",
+    "name_placeholder": "Your full name",
+    "email_label": "Email",
+    "email_placeholder": "Your email address",
+    "save_success": "Profile updated successfully.",
+    "save_failed": "Failed to update profile. Please try again.",
+    "name_required": "Name is required.",
+    "email_required": "Email is required."
+  },
+  "status": {
+    "DONE": "Done",
+    "ACTIVE": "Active",
+    "COMPLETED": "Completed",
+    "PASSED": "Passed",
+    "SCHEDULED": "Scheduled",
+    "PENDING": "Pending",
+    "RUNNING": "Running",
+    "FAILED": "Failed",
+    "MISSED": "Missed",
+    "CRITICAL": "Critical",
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low",
+    "DRAFT": "Draft",
+    "UNKNOWN": "Unknown",
+    "BASIC": "Basic",
+    "GROWTH": "Growth",
+    "ENTERPRISE": "Enterprise"
+  },
+  "confirm_dialog": {
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "login_failed": "Login failed. Please check your credentials.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "not_found": {
+  "title": "Page Not Found",
+  "subtitle": "The page you're looking for doesn't exist or has been moved.",
+  "back_home": "Back to Dashboard"
+}
+}

@@ -1,29 +1,31 @@
 import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import SidebarProfile from './profile/SidebarProfile'
 import './styles/Sidebar.css'
 
-const NAV_ITEMS = [
-  {
-    section: 'Main',
-    items: [
-      {
-        label: 'Dashboard',
-        path: '/dashboard',
-        icon: (
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="7" height="7"/>
-            <rect x="14" y="3" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/>
-          </svg>
-        ),
-      },
-    ],
-  },
-]
-
 export default function Sidebar({ isOpen, onToggle }) {
+  const { t } = useTranslation()
+
+  const NAV_ITEMS = [
+    {
+      section: t('sidebar.nav.dashboard'),
+      items: [
+        {
+          label: t('sidebar.nav.dashboard'),
+          path: '/dashboard',
+          icon: (
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+            </svg>
+          ),
+        },
+      ],
+    },
+  ]
 
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape' && isOpen) onToggle() }
@@ -34,7 +36,6 @@ export default function Sidebar({ isOpen, onToggle }) {
   return (
     <aside className={`sidebar ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
 
-      {/* ── Header — logo only ─────────────────────────────── */}
       <div className="sidebar__header">
         {isOpen && (
           <span className="sidebar__logo">
@@ -43,7 +44,6 @@ export default function Sidebar({ isOpen, onToggle }) {
         )}
       </div>
 
-      {/* ── Nav ───────────────────────────────────────────── */}
       <nav className="sidebar__nav">
         {NAV_ITEMS.map((group) => (
           <div key={group.section} className="sidebar__group">
@@ -51,7 +51,8 @@ export default function Sidebar({ isOpen, onToggle }) {
               <span className="sidebar__group-label">{group.section}</span>
             )}
             {group.items.map((item) => (
-              <NavLink
+
+                <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
@@ -64,17 +65,17 @@ export default function Sidebar({ isOpen, onToggle }) {
                   <span className="sidebar__link-label">{item.label}</span>
                 )}
               </NavLink>
+
             ))}
           </div>
         ))}
       </nav>
 
-      {/* ── Bottom ────────────────────────────────────────── */}
       <div className="sidebar__bottom">
         <SidebarProfile isOpen={isOpen} />
         {isOpen && (
           <div className="sidebar__copyright">
-            © {new Date().getFullYear()} MIGFORA
+            {t('sidebar.copyright', { year: new Date().getFullYear() })}
           </div>
         )}
       </div>

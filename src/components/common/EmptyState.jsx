@@ -1,15 +1,10 @@
+import useLanguageStore from '../../store/useLanguageStore'
 import './styles/EmptyState.css'
 
-/**
- * EmptyState
- *
- * Props:
- *   icon     — ReactNode  — optional SVG icon (defaults to a box icon)
- *   title    — string     — main message
- *   subtitle — string     — supporting text (optional)
- *   action   — ReactNode  — optional button/element rendered below subtitle
- */
 function EmptyState({ icon, title, subtitle, action }) {
+  const { lang } = useLanguageStore()
+  const isRTL = lang === 'ar'
+
   return (
     <div className="empty-state">
       <div className="empty-state__icon">
@@ -21,8 +16,18 @@ function EmptyState({ icon, title, subtitle, action }) {
           </svg>
         )}
       </div>
+
       <p className="empty-state__title">{title}</p>
-      {subtitle && <p className="empty-state__subtitle">{subtitle}</p>}
+
+      {subtitle && (
+        <p
+          className="empty-state__subtitle"
+          style={{ unicodeBidi: 'plaintext', textAlign: isRTL ? 'right' : 'center' }}
+        >
+          {subtitle}
+        </p>
+      )}
+
       {action && <div className="empty-state__action">{action}</div>}
     </div>
   )

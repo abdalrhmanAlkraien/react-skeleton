@@ -1,29 +1,30 @@
 .toast-container {
-  position:       fixed;
-  bottom:         24px;
-  right:          24px;
-  z-index:        9999;
-  display:        flex;
-  flex-direction: column;
-  gap:            10px;
-  pointer-events: none;
+  position:           fixed;
+  inset-block-end:    24px;
+  inset-inline-end:   24px;
+  z-index:            9999;
+  display:            flex;
+  flex-direction:     column;
+  gap:                10px;
+  pointer-events:     none;
 }
 
 .toast {
-  display:          flex;
-  align-items:      center;
-  gap:              10px;
-  padding:          12px 16px;
-  border-radius:    10px;
-  border:           1px solid transparent;
-  font-family:      var(--font-body);
-  font-size:        13px;
-  font-weight:      500;
-  min-width:        280px;
-  max-width:        380px;
-  box-shadow:       0 8px 24px rgba(8, 15, 24, 0.12);
-  pointer-events:   all;
-  animation:        toast-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  display:        flex;
+  align-items:    center;
+  gap:            10px;
+  padding-block:  12px;
+  padding-inline: 16px;
+  border-radius:  10px;
+  border:         1px solid transparent;
+  font-family:    var(--font-body);
+  font-size:      13px;
+  font-weight:    500;
+  min-width:      280px;
+  max-width:      380px;
+  box-shadow:     0 8px 24px rgba(8, 15, 24, 0.12);
+  pointer-events: all;
+  animation:      toast-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .toast--success {
@@ -44,16 +45,8 @@
   color:            #2563eb;
 }
 
-.toast__icon {
-  display:     flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.toast__message {
-  flex: 1;
-  line-height: 1.4;
-}
+.toast__icon    { display: flex; align-items: center; flex-shrink: 0; }
+.toast__message { flex: 1; line-height: 1.4; }
 
 .toast__close {
   background:  none;
@@ -68,15 +61,9 @@
   transition:  opacity 0.15s;
 }
 
-.toast__close:hover {
-  opacity: 1;
-}
+.toast__close:hover { opacity: 1; }
 
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
-
-/* ─── RTL ─────────────────────────────────────────────────── */
-[dir="rtl"] .toast-container { right: auto; left: 24px; }
-[dir="rtl"] .toast           { flex-direction: row-reverse; text-align: right; }

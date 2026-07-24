@@ -8,6 +8,7 @@ import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 import Profile from '../pages/Profile'
 import ComponentsPreview from '../pages/ComponentsPreview'
+import NotFound from '../components/common/NotFound'
 
 export default function AppRoutes() {
   return (
@@ -18,13 +19,13 @@ export default function AppRoutes() {
           <AuthLayout>
             <Login />
           </AuthLayout>
-        }/>
+        } />
 
         <Route path="/register" element={
           <AuthLayout>
             <Register />
           </AuthLayout>
-        }/>
+        } />
 
         <Route path="/dashboard" element={
           <ProtectedRoute>
@@ -32,7 +33,7 @@ export default function AppRoutes() {
               <Dashboard />
             </AppLayout>
           </ProtectedRoute>
-        }/>
+        } />
 
         <Route path="/profile" element={
           <ProtectedRoute>
@@ -40,7 +41,7 @@ export default function AppRoutes() {
               <Profile />
             </AppLayout>
           </ProtectedRoute>
-        }/>
+        } />
 
         <Route path="/preview" element={
           <ProtectedRoute>
@@ -48,9 +49,8 @@ export default function AppRoutes() {
               <ComponentsPreview />
             </AppLayout>
           </ProtectedRoute>
-        }/>
-
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        } />
+        <Route path="*" element={<NotFound />} />
 
       </Routes>
     </BrowserRouter>

@@ -1,9 +1,9 @@
 .page-header {
-  display:         flex;
-  align-items:     flex-start;
-  justify-content: space-between;
-  gap:             16px;
-  margin-bottom:   28px;
+  display:          flex;
+  align-items:      flex-start;
+  justify-content:  space-between;
+  gap:              16px;
+  margin-block-end: 28px;
 }
 
 .page-header__text {
@@ -33,4 +33,18 @@
   display:     flex;
   align-items: center;
   gap:         8px;
+}
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+.page-header--rtl {
+  flex-direction: row-reverse;
+}
+
+.page-header--rtl .page-header__title,
+.page-header--rtl .page-header__subtitle {
+  text-align: right;
+}
+
+.page-header--rtl {
+  flex-direction: row-reverse !important;
 }

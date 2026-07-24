@@ -1,20 +1,18 @@
-/* ─── Container ──────────────────────────────────────────── */
 .pagination {
-  display:         flex;
-  align-items:     center;
-  justify-content: space-between;
-  padding:         14px 20px;
-  border-top:      1px solid var(--border-color);
+  display:          flex;
+  align-items:      center;
+  justify-content:  space-between;
+  padding-block:    14px;
+  padding-inline:   20px;
+  border-block-start: 1px solid var(--border-color);
 }
 
-/* ─── Info text ───────────────────────────────────────────── */
 .pagination__info {
   font-size:   13px;
   font-family: var(--font-body);
   color:       var(--text-secondary);
 }
 
-/* ─── Controls ────────────────────────────────────────────── */
 .pagination__controls {
   display: flex;
   gap:     6px;
@@ -35,18 +33,14 @@
 }
 
 .pagination__controls button:hover:not(:disabled) {
-  border-color:     var(--color-orange);
-  color:            var(--color-orange);
+  border-color: var(--color-orange);
+  color:        var(--color-orange);
 }
 
 .pagination__controls button:disabled {
   opacity: 0.35;
   cursor:  not-allowed;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   DARK MODE
-═══════════════════════════════════════════════════════════ */
 
 [data-theme="dark"] .pagination__controls button {
   background-color: rgba(255, 255, 255, 0.05);
@@ -58,7 +52,3 @@
   border-color:     var(--color-orange);
   color:            var(--color-orange);
 }
-
-/* ─── RTL ─────────────────────────────────────────────────── */
-[dir="rtl"] .pagination           { flex-direction: row-reverse; }
-[dir="rtl"] .pagination__controls { flex-direction: row-reverse; }

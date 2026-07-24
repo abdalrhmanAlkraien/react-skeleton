@@ -1,8 +1,8 @@
 .section-divider {
-  display:     flex;
-  align-items: center;
-  gap:         12px;
-  margin:      28px 0 16px;
+  display:          flex;
+  align-items:      center;
+  gap:              12px;
+  margin-block:     28px 16px;
 }
 
 .section-divider__label {
@@ -18,12 +18,9 @@
 .section-divider__line {
   flex:       1;
   height:     1px;
-  background: var(--border-color);
+  background: rgba(255, 153, 0, 0.2);
 }
 
 [data-theme="dark"] .section-divider__line {
   background: rgba(255, 153, 0, 0.3);
 }
-
-/* ─── RTL ─────────────────────────────────────────────────── */
-[dir="rtl"] .section-divider { flex-direction: row-reverse; }

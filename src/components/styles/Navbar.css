@@ -1,18 +1,22 @@
 .navbar {
-  position:         fixed;
-  top:              0;
-  left:             0;
-  right:            0;
-  height:           var(--navbar-height);
-  background-color: var(--bg-navbar);
-  display:          flex;
-  align-items:      center;
-  justify-content:  space-between;
-  padding:          0 16px;
-  z-index:          1100;
-  box-shadow:       var(--shadow-navbar);
-  border-bottom:    1px solid var(--border-color);
-  transition:       background-color 0.2s ease;
+  position:          fixed;
+  inset-block-start: 0;
+  inset-inline:      0;
+  height:            var(--navbar-height);
+  background-color:  var(--bg-navbar);
+  display:           flex;
+  align-items:       center;
+  justify-content:   space-between;
+  padding-inline:    16px;
+  gap:               12px;
+  z-index:           1100;
+  box-shadow:        var(--shadow-navbar);
+  border-block-end:  1px solid var(--border-color);
+  transition:        background-color 0.2s ease;
+}
+
+[dir="rtl"] .navbar {
+  flex-direction: row-reverse;
 }
 
 .navbar__left {
@@ -20,6 +24,13 @@
   align-items: center;
   gap:         12px;
 }
+
+.navbar__actions {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
 
 .navbar__logo {
   text-decoration: none;
@@ -32,15 +43,8 @@
   flex-shrink:     0;
 }
 
-.navbar__logo-accent {
-  color: var(--color-orange);
-}
+.navbar__logo-accent { color: var(--color-orange); }
 
-.navbar__actions {
-  display:     flex;
-  align-items: center;
-  gap:         8px;
-}
 
 .navbar__icon-btn {
   background:    none;
@@ -59,7 +63,6 @@
   background-color: var(--nav-link-hover-bg);
 }
 
-/* ─── Language button ─────────────────────────────────────── */
 .navbar__lang-btn {
   display:       flex;
   align-items:   center;
@@ -68,9 +71,10 @@
   border:        1px solid var(--border-color-2);
   border-radius: 8px;
   cursor:        pointer;
-  padding:       5px 10px;
-  color:         var(--text-secondary);
-  transition:    color 0.2s, border-color 0.2s, background-color 0.2s;
+  padding-block:  5px;
+  padding-inline: 10px;
+  color:          var(--text-secondary);
+  transition:     color 0.2s, border-color 0.2s, background-color 0.2s;
 }
 
 .navbar__lang-btn:hover {
@@ -80,11 +84,11 @@
 }
 
 .navbar__lang-flag {
-  display:     flex;
-  align-items: center;
+  display:       flex;
+  align-items:   center;
   border-radius: 2px;
-  overflow:    hidden;
-  flex-shrink: 0;
+  overflow:      hidden;
+  flex-shrink:   0;
 }
 
 .navbar__lang-code {
@@ -93,10 +97,3 @@
   font-weight:    700;
   letter-spacing: 0.06em;
 }
-
-.navbar__hamburger-btn { order: 1; }
-.navbar__logo          { order: 2; }
-
-/* ─── RTL ─────────────────────────────────────────────────── */
-html[dir="rtl"] .navbar__left   { flex-direction: row-reverse; }
-html[dir="rtl"] .navbar__actions { flex-direction: row-reverse; }

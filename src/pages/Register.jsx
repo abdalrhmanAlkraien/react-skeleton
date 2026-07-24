@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import appConfig from '../config/appConfig'
 import { registerApi } from '../api/auth'
 import { FormButton, FormAlert } from '../components/common'
 import './styles/Register.css'
-import useThemeStore from '../store/useThemeStore'
 
 export default function Register() {
   const navigate = useNavigate()
-  const { theme, toggleTheme } = useThemeStore()
+  const { t } = useTranslation()
 
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
@@ -28,7 +28,7 @@ export default function Register() {
     setError('')
     setSuccess('')
     if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match.')
+      setError(t('auth.register.passwords_no_match'))
       return
     }
     setLoading(true)
@@ -37,13 +37,10 @@ export default function Register() {
         fullName: form.fullName, username: form.username,
         email: form.email, phone: form.phone, password: form.password,
       })
-      setSuccess(res.data?.[appConfig.auth.messageKey] || 'Registration successful!')
+      setSuccess(res.data?.[appConfig.auth.messageKey] || t('auth.register.success'))
       setTimeout(() => navigate('/login'), 1500)
     } catch (err) {
-      setError(
-        err.response?.data?.[appConfig.auth.messageKey] ||
-        'Registration failed. Please try again.'
-      )
+      setError(err.response?.data?.[appConfig.auth.messageKey] || t('auth.register.failed'))
     } finally {
       setLoading(false)
     }
@@ -57,95 +54,72 @@ export default function Register() {
       </div>
 
       <div className="auth-card__heading">
-        <h1 className="auth-card__title">Create account</h1>
-        <p className="auth-card__subtitle">Fill in your details to get started</p>
+        <h1 className="auth-card__title">{t('auth.register.title')}</h1>
+        <p className="auth-card__subtitle">{t('auth.register.subtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="auth-card__form">
 
         <div className="auth-grid">
           <div className="auth-field">
-            <label className="auth-field__label">Full Name</label>
+            <label className="auth-field__label">{t('auth.register.full_name')}</label>
             <input className="auth-field__input" type="text" name="fullName"
-              placeholder="John Doe" value={form.fullName} onChange={handleChange} required />
+              placeholder={t('auth.register.full_name_placeholder')}
+              value={form.fullName} onChange={handleChange} required />
           </div>
           <div className="auth-field">
-            <label className="auth-field__label">Username</label>
+            <label className="auth-field__label">{t('auth.register.username')}</label>
             <input className="auth-field__input" type="text" name="username"
-              placeholder="johndoe" value={form.username} onChange={handleChange} required />
+              placeholder={t('auth.register.username_placeholder')}
+              value={form.username} onChange={handleChange} required />
           </div>
         </div>
 
         <div className="auth-grid">
           <div className="auth-field">
-            <label className="auth-field__label">Email</label>
+            <label className="auth-field__label">{t('auth.register.email')}</label>
             <input className="auth-field__input" type="email" name="email"
-              placeholder="john@email.com" value={form.email} onChange={handleChange} required />
+              placeholder={t('auth.register.email_placeholder')}
+              value={form.email} onChange={handleChange} required />
           </div>
           <div className="auth-field">
-            <label className="auth-field__label">Phone Number</label>
+            <label className="auth-field__label">{t('auth.register.phone')}</label>
             <input className="auth-field__input" type="tel" name="phone"
-              placeholder="+966 5X XXX XXXX" value={form.phone} onChange={handleChange} required />
+              placeholder={t('auth.register.phone_placeholder')}
+              value={form.phone} onChange={handleChange} required />
           </div>
         </div>
 
         <div className="auth-grid">
           <div className="auth-field">
-            <label className="auth-field__label">Password</label>
+            <label className="auth-field__label">{t('auth.register.password')}</label>
             <input className="auth-field__input" type="password" name="password"
-              placeholder="Min. 8 characters" value={form.password} onChange={handleChange} required minLength={8} />
+              placeholder={t('auth.register.password_placeholder')}
+              value={form.password} onChange={handleChange} required minLength={8} />
           </div>
           <div className="auth-field">
-            <label className="auth-field__label">Confirm Password</label>
+            <label className="auth-field__label">{t('auth.register.confirm_password')}</label>
             <input className="auth-field__input" type="password" name="confirmPassword"
-              placeholder="Repeat password" value={form.confirmPassword} onChange={handleChange} required />
+              placeholder={t('auth.register.confirm_password_placeholder')}
+              value={form.confirmPassword} onChange={handleChange} required />
           </div>
         </div>
 
         <FormAlert type="error"   message={error}   />
         <FormAlert type="success" message={success} />
 
-        <FormButton type="submit" variant="primary" loading={loading} loadingText="Creating account…" fullWidth>
-          Create Account
+        <FormButton type="submit" variant="primary" loading={loading} loadingText={t('auth.register.submitting')} fullWidth>
+          {t('auth.register.submit')}
         </FormButton>
 
       </form>
 
       <p className="auth-card__footer">
-        Already have an account?{' '}
+        {t('auth.register.has_account')}{' '}
         <span className="auth-card__footer-link" onClick={() => navigate('/login')}>
-          Sign in
+          {t('auth.register.sign_in')}
         </span>
       </p>
-
-
-      <div className="auth-card__theme">
-        <button className="auth-card__theme-btn" onClick={toggleTheme}>
-          {theme === 'dark' ? (
-            <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-              Switch to light mode
-            </>
-          ) : (
-            <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-              Switch to dark mode
-            </>
-          )}
-        </button>
-      </div>
 
     </div>
   )

@@ -34,5 +34,7 @@
   border-color:     #BBF7D0;
 }
 
-/* ─── RTL ─────────────────────────────────────────────────── */
-[dir="rtl"] .form-alert { flex-direction: row-reverse; text-align: right; }
+/* RTL — flex row reverses automatically with dir, force text alignment */
+.form-alert {
+  text-align: start;
+}

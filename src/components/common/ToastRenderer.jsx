@@ -1,17 +1,15 @@
+import { useTranslation } from 'react-i18next'
 import useToastStore from '../../store/useToastStore'
 import './styles/ToastRenderer.css'
 
 function ToastRenderer() {
+  const { t } = useTranslation()
   const { toasts, removeToast } = useToastStore()
 
   return (
     <div className="toast-container" aria-live="polite">
       {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`toast toast--${toast.type}`}
-          role="status"
-        >
+        <div key={toast.id} className={`toast toast--${toast.type}`} role="status">
           <span className="toast__icon">
             {toast.type === 'success' && (
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -38,7 +36,7 @@ function ToastRenderer() {
           <button
             className="toast__close"
             onClick={() => removeToast(toast.id)}
-            aria-label="Dismiss"
+            aria-label={t('common.dismiss')}
           >
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
               <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>

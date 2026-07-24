@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import './styles/ConfirmDialog.css'
 
-function ConfirmDialog({ isOpen, title, message, onConfirm, onCancel, confirmLabel = 'Delete', isDanger = true }) {
+function ConfirmDialog({ isOpen, title, message, onConfirm, onCancel, confirmLabel, isDanger = true }) {
+  const { t } = useTranslation()
+
   if (!isOpen) return null
 
   return (
@@ -17,12 +20,14 @@ function ConfirmDialog({ isOpen, title, message, onConfirm, onCancel, confirmLab
         <h3 className="confirm-dialog__title">{title}</h3>
         <p className="confirm-dialog__message">{message}</p>
         <div className="confirm-dialog__actions">
-          <button className="confirm-dialog__cancel" onClick={onCancel}>Cancel</button>
+          <button className="confirm-dialog__cancel" onClick={onCancel}>
+            {t('confirm_dialog.cancel')}
+          </button>
           <button
             className={`confirm-dialog__confirm ${isDanger ? 'confirm-dialog__confirm--danger' : ''}`}
             onClick={onConfirm}
           >
-            {confirmLabel}
+            {confirmLabel || t('common.confirm')}
           </button>
         </div>
       </div>

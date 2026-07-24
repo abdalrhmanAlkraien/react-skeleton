@@ -1,15 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import './styles/SearchInput.css'
 
-/**
- * SearchInput
- *
- * Props:
- *   value       — controlled value
- *   onChange    — change handler
- *   placeholder — string (default: 'Search…')
- *   onClear     — optional function — shows × button when value is non-empty
- */
-function SearchInput({ value, onChange, placeholder = 'Search…', onClear }) {
+function SearchInput({ value, onChange, placeholder, onClear }) {
+  const { t } = useTranslation()
+
   return (
     <div className="search-input">
       <span className="search-input__icon">
@@ -24,7 +18,7 @@ function SearchInput({ value, onChange, placeholder = 'Search…', onClear }) {
         type="text"
         value={value}
         onChange={onChange}
-        placeholder={placeholder}
+        placeholder={placeholder || t('common.search')}
       />
 
       {onClear && value && (
@@ -32,7 +26,7 @@ function SearchInput({ value, onChange, placeholder = 'Search…', onClear }) {
           className="search-input__clear"
           type="button"
           onClick={onClear}
-          aria-label="Clear search"
+          aria-label={t('common.close')}
         >
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
             <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
