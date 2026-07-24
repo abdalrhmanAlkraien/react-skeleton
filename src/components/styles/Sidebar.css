@@ -159,3 +159,19 @@
   font-family: var(--font-body);
   white-space: nowrap;
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .sidebar {
+  left:         auto;
+  right:        0;
+  border-right: none;
+  border-left:  1px solid var(--border-color);
+}
+
+[dir="rtl"] .sidebar--open   { transform: translateX(0); }
+[dir="rtl"] .sidebar--closed { transform: translateX(100%); }
+
+[dir="rtl"] .sidebar__header      { flex-direction: row-reverse; }
+[dir="rtl"] .sidebar__link        { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .sidebar__group-label { text-align: right; }
+[dir="rtl"] .sidebar__copyright   { text-align: right; }

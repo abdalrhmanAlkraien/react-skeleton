@@ -33,3 +33,6 @@
   background-color: #F0FDF4;
   border-color:     #BBF7D0;
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .form-alert { flex-direction: row-reverse; text-align: right; }

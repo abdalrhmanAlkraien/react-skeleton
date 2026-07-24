@@ -188,3 +188,14 @@
   color:            var(--color-orange-2);
   background-color: rgba(255, 153, 0, 0.08);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .auth-card          { direction: rtl; text-align: right; }
+[dir="rtl"] .auth-card__heading { text-align: right; }
+[dir="rtl"] .auth-field         { text-align: right; }
+[dir="rtl"] .auth-field__label  { text-align: right; }
+[dir="rtl"] .auth-field__input  { text-align: right; }
+[dir="rtl"] .auth-grid          { direction: rtl; }
+[dir="rtl"] .auth-card__footer  { direction: rtl; }
+[dir="rtl"] .auth-card__theme   { direction: rtl; }
+[dir="rtl"] .auth-card__theme-btn { flex-direction: row-reverse; }

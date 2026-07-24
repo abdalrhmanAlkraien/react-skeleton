@@ -57,3 +57,7 @@
 [data-theme="dark"] .tabs__count--active {
   color: var(--color-orange);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .tabs      { flex-direction: row-reverse; }
+[dir="rtl"] .tabs__tab { flex-direction: row-reverse; }

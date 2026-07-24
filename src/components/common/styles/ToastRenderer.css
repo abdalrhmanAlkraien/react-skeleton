@@ -76,3 +76,7 @@
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .toast-container { right: auto; left: 24px; }
+[dir="rtl"] .toast           { flex-direction: row-reverse; text-align: right; }

@@ -25,3 +25,6 @@
 .footer__tagline {
   color: var(--text-muted);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .footer { flex-direction: row-reverse; }

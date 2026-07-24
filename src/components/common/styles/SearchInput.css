@@ -85,3 +85,8 @@
 [data-theme="dark"] .search-input__field::placeholder {
   color: rgba(255, 153, 0, 0.4);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .search-input__icon  { left: auto; right: 12px; }
+[dir="rtl"] .search-input__field { padding: 9px 36px 9px 36px; text-align: right; }
+[dir="rtl"] .search-input__clear { right: auto; left: 10px; }

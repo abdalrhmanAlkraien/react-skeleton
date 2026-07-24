@@ -100,3 +100,6 @@
 .confirm-dialog__confirm:not(.confirm-dialog__confirm--danger):hover {
   background-color: var(--color-navy-3);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .confirm-dialog__actions { flex-direction: row-reverse; }

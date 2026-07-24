@@ -58,3 +58,7 @@
   border-color:     var(--color-orange);
   color:            var(--color-orange);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .pagination           { flex-direction: row-reverse; }
+[dir="rtl"] .pagination__controls { flex-direction: row-reverse; }

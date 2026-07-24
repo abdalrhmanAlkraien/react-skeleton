@@ -90,3 +90,9 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
+
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .form-field        { text-align: right; }
+[dir="rtl"] .form-field__label { flex-direction: row-reverse; }
+[dir="rtl"] .form-field__input { text-align: right; }

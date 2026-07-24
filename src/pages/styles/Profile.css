@@ -66,3 +66,7 @@
 .profile__card:hover .profile__card-arrow {
   color: var(--color-orange);
 }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .profile__card { flex-direction: row-reverse; }
+[dir="rtl"] .profile__info { text-align: right; }

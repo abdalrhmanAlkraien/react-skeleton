@@ -100,3 +100,8 @@
 .sidebar-profile--rail .sidebar-profile__row {
   justify-content: center;
 }
+
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .sidebar-profile__row  { flex-direction: row-reverse; }
+[dir="rtl"] .sidebar-profile__info { text-align: right; }

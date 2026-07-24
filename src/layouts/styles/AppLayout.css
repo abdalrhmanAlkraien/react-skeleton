@@ -22,3 +22,31 @@
 
 .app-layout--sidebar-open   footer { margin-left: var(--sidebar-width); }
 .app-layout--sidebar-closed footer { margin-left: 52px; }
+
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .app-layout--sidebar-open   .app-layout__main { margin-left: 0; margin-right: var(--sidebar-width); }
+[dir="rtl"] .app-layout--sidebar-closed .app-layout__main { margin-left: 0; margin-right: 52px; }
+[dir="rtl"] .app-layout--sidebar-open   footer            { margin-left: 0; margin-right: var(--sidebar-width); }
+[dir="rtl"] .app-layout--sidebar-closed footer            { margin-left: 0; margin-right: 52px; }
+
+/* ─── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .app-layout--sidebar-open .app-layout__main {
+  margin-left:  0;
+  margin-right: var(--sidebar-width);
+}
+
+[dir="rtl"] .app-layout--sidebar-closed .app-layout__main {
+  margin-left:  0;
+  margin-right: 52px;
+}
+
+[dir="rtl"] .app-layout--sidebar-open footer {
+  margin-left:  0;
+  margin-right: var(--sidebar-width);
+}
+
+[dir="rtl"] .app-layout--sidebar-closed footer {
+  margin-left:  0;
+  margin-right: 52px;
+}
