@@ -653,6 +653,12 @@ try {
 □ Add to /preview
 ```
 
+
+- utils/number.js: formatNumber, formatCurrency (Intl, current language) · utils/date.js: formatMonth
+- Recharts: theme with CSS on the chart container (fill/stroke on .recharts-* classes using tokens)
+  and a custom Tooltip content component — no hex colors in chart props
+- Dashboard data: GET /dashboard/summary → { stats, projects, decisions, jobs, spend, activity }
+
 ---
 
 ## Known Gaps (legacy — do not copy into new code)
