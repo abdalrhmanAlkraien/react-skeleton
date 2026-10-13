@@ -1,21 +1,37 @@
-import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
+import useLanguageStore from '../../store/useLanguageStore'
+import useScrollLock from '../../hooks/useScrollLock'
 import './styles/Drawer.css'
+import useEscape from '../../hooks/useEscape'
 
-function Drawer({ open, title, onClose, size = 'md', footer, error, children }) {
+/**
+ * Drawer — slide-in panel shell
+ *
+ * Props:
+ *   open, title, onClose
+ *   subtitle  — optional line under the title
+ *   size      — 'sm' 360px | 'md' 440px | 'lg' 600px | 'xl' 860px
+ *   error     — banner under the header
+ *   footer    — buttons (primary + ghost)
+ *
+ * Owns: portal, overlay, scroll lock, Escape (via escape stack), slide transition.
+ */
+function Drawer({ open, title, subtitle, onClose, size = 'md', footer, error, children }) {
+  const { lang } = useLanguageStore()
   const { t } = useTranslation()
 
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [open])
+  useScrollLock(open)
+  useEscape(open, () => onClose?.())
 
-  useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') onClose() }
-    if (open) document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [open, onClose])
+  const isRTL = lang === 'ar'
+
+  const drawerClasses = [
+    'drawer',
+    `drawer--${size}`,
+    isRTL ? 'drawer--rtl' : '',
+    open ? 'drawer--open' : '',
+  ].filter(Boolean).join(' ')
 
   return createPortal(
     <>
@@ -24,14 +40,12 @@ function Drawer({ open, title, onClose, size = 'md', footer, error, children }) 
         onClick={onClose}
         aria-hidden="true"
       />
-      <div
-        className={`drawer drawer--${size} ${open ? 'drawer--open' : ''}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-      >
+      <div className={drawerClasses} role="dialog" aria-modal="true" aria-label={title} aria-hidden={!open}>
         <div className="drawer__header">
-          <h2 className="drawer__title">{title}</h2>
+          <div className="drawer__heading">
+            <h2 className="drawer__title">{title}</h2>
+            {subtitle && <p className="drawer__subtitle">{subtitle}</p>}
+          </div>
           <button className="drawer__close" onClick={onClose} aria-label={t('common.close')}>
             <svg viewBox="0 0 16 16" fill="none">
               <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>

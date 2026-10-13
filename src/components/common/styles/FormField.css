@@ -96,3 +96,10 @@
 [dir="rtl"] .form-field        { text-align: right; }
 [dir="rtl"] .form-field__label { flex-direction: row-reverse; }
 [dir="rtl"] .form-field__input { text-align: right; }
+
+.form-field__helper {
+  font-family: var(--font-body);
+  font-size:   12px;
+  line-height: 1.5;
+  color:       var(--text-muted);
+}

@@ -1,5 +1,6 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import appConfig from '../config/appConfig'
 import en from './locales/en.json'
 import ar from './locales/ar.json'
 
@@ -10,9 +11,9 @@ i18n
       en: { translation: en },
       ar: { translation: ar },
     },
-    lng:             'en',
-    fallbackLng:     'en',
-    interpolation:   { escapeValue: false },
+    lng:           appConfig.features.defaultLang,
+    fallbackLng:   'en',
+    interpolation: { escapeValue: false },
   })
 
 export default i18n

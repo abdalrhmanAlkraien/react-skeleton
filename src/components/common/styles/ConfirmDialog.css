@@ -1,105 +1,56 @@
-.confirm-dialog-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-}
-
-.confirm-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 201;
-  background-color: var(--color-white);
-  border-radius: 14px;
-  padding: 28px 28px 24px;
-  width: 360px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 20px 60px rgba(8, 15, 24, 0.18);
+.confirm-dialog__content {
+  display:            flex;
+  flex-direction:     column;
+  align-items:        center;
+  gap:                10px;
+  padding-block-start: 8px;
+  text-align:         center;
 }
 
 .confirm-dialog__icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background-color: #fee2e2;
-  color: #dc2626;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 4px;
+  width:            48px;
+  height:           48px;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  margin-block-end: 4px;
+  border-radius:    12px;
+}
+
+.confirm-dialog__icon--danger {
+  background-color: var(--color-danger-bg);
+  color:            var(--color-danger);
+}
+
+.confirm-dialog__icon--info {
+  background-color: var(--color-warning-bg);
+  color:            var(--color-warning);
 }
 
 .confirm-dialog__title {
-  font-size: 16px;
+  margin:      0;
   font-family: var(--font-heading);
-  color: var(--color-navy);
-  text-align: center;
+  font-size:   16px;
+  color:       var(--text-primary);
 }
 
 .confirm-dialog__message {
-  font-size: 13px;
+  margin:      0;
   font-family: var(--font-body);
-  color: rgba(13, 27, 42, 0.55);
-  text-align: center;
+  font-size:   13px;
   line-height: 1.6;
+  color:       var(--text-secondary);
 }
 
-.confirm-dialog__actions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  margin-top: 8px;
+.confirm-dialog__require {
+  width:              100%;
+  margin-block-start: 8px;
+  text-align:         start;
 }
 
-.confirm-dialog__cancel {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(13, 27, 42, 0.12);
-  background-color: var(--color-white);
-  color: var(--color-navy);
-  font-size: 13px;
-  font-family: var(--font-body);
-  cursor: pointer;
-  transition: background-color 0.2s;
+.confirm-dialog .modal__footer {
+  border-block-start:  none;
+  padding-block-start: 0;
 }
 
-.confirm-dialog__cancel:hover {
-  background-color: var(--color-off-white);
-}
-
-.confirm-dialog__confirm {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 13px;
-  font-family: var(--font-body);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.confirm-dialog__confirm--danger {
-  background-color: #dc2626;
-  color: white;
-}
-
-.confirm-dialog__confirm--danger:hover {
-  background-color: #b91c1c;
-}
-
-.confirm-dialog__confirm:not(.confirm-dialog__confirm--danger) {
-  background-color: var(--color-navy);
-  color: var(--color-white);
-}
-
-.confirm-dialog__confirm:not(.confirm-dialog__confirm--danger):hover {
-  background-color: var(--color-navy-3);
-}
-
-/* ─── RTL ─────────────────────────────────────────────────── */
-[dir="rtl"] .confirm-dialog__actions { flex-direction: row-reverse; }
+/* ═══ DARK MODE ═══ — handled by semantic tokens */

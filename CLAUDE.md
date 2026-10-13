@@ -1,638 +1,546 @@
-# MIGFORA Skeleton — CLAUDE.md
+# MIGFORA Studio — CLAUDE.md
 > Read this before every task. This is the single source of truth for this project.
+> It describes the code as it exists, the agreed conventions, and the known gaps.
 
 ---
 
 ## Project Identity
 
-**Name:** MIGFORA Skeleton  
-**Type:** React JS base skeleton — reused across all MIGFORA projects  
-**Owner:** MIGFORA — AWS Partner, Cloud & Technology Solutions (GCC/MENA market)  
-**Stack:** Vite + React JS + React Router v6 + Axios + Zustand + Recharts  
-**Styling:** Plain CSS (no Tailwind, no Bootstrap, no CSS-in-JS)  
-**Language:** JavaScript only — never suggest or use TypeScript  
+**Product:** MIGFORA Studio — AI-assisted production workspace for films, series and short stories
+**Base:** MIGFORA Skeleton (reusable React skeleton for all MIGFORA projects)
+**Owner:** MIGFORA — AWS Partner, Cloud & Technology Solutions (GCC/MENA market)
+**Stack:** Vite + React JS + React Router v6 + Axios + Zustand + react-i18next + Recharts
+**Styling:** Plain CSS (no Tailwind, no Bootstrap, no CSS-in-JS)
+**Language:** JavaScript only — never suggest or use TypeScript
+**UI language:** English only — controlled by `appConfig.features.multiLanguage = false` (language code is kept, not deleted)
 
 ---
 
 ## Before Every Task
 
 1. Read this file fully before writing any code
-2. Identify which files need to be created or modified
-3. Follow the folder structure exactly — do not invent new patterns
-4. Check if the task requires a new page, API, store, component, or sidebar item
+2. Check **Common Components** — reuse before creating anything new
+3. Identify which files need to be created or modified
+4. Follow the folder structure exactly — do not invent new patterns
 5. Use the relevant checklist below
+6. Check **Known Gaps** — don't copy a legacy pattern into new code
+
+New common components are added only when a real page needs one that doesn't exist.
 
 ---
 
 ## Folder Structure
 
 ```
+index.html                       ← Google Fonts: Syne 600/700/800, DM Sans 300/400/500
+.env                             ← VITE_API_BASE_URL, VITE_MULTI_LANGUAGE, VITE_DEFAULT_LANG
 src/
+├── main.jsx                     ← imports i18n, useLanguageStore (init), index.css; renders <App/>
+├── App.jsx                      ← renders <AppRoutes/>
+├── index.css                    ← design tokens (light + dark), reset
 ├── api/
 │   ├── axiosInstance.js
 │   ├── auth.js
 │   └── profile.js
 ├── components/
-│   ├── common/                  ← shared UI components (see Common Components section)
-│   │   ├── FormButton.jsx
-│   │   ├── FormField.jsx
-│   │   ├── FormAlert.jsx
-│   │   ├── Drawer.jsx
-│   │   ├── ConfirmDialog.jsx
-│   │   ├── Pagination.jsx
-│   │   ├── PasswordInput.jsx
-│   │   ├── SectionDivider.jsx
-│   │   ├── EmptyState.jsx
-│   │   ├── StatusBadge.jsx
-│   │   ├── PageHeader.jsx
-│   │   ├── Spinner.jsx
-│   │   ├── ToastRenderer.jsx
-│   │   ├── SearchInput.jsx
-│   │   ├── Tabs.jsx
-│   │   ├── index.js             ← barrel export for all common components
+│   ├── common/                  ← shared UI (see Common Components)
+│   │   ├── *.jsx                ← one component per file
+│   │   ├── index.js             ← barrel export (NotFound is not exported)
 │   │   └── styles/              ← one CSS file per component
-│   ├── profile/
-│   │   ├── ProfileDrawer.jsx
-│   │   ├── SidebarProfile.jsx
-│   │   └── styles/
-│   ├── styles/                  ← CSS for Navbar, Sidebar, Footer
-│   ├── Footer.jsx
+│   ├── profile/                 ← ProfileDrawer, SidebarProfile
+│   ├── styles/                  ← Navbar.css, Sidebar.css, Footer.css (+ legacy SubNavbar.css)
+│   ├── Footer.jsx               ← exists, not mounted
 │   ├── Navbar.jsx
-│   └── Sidebar.jsx
+│   ├── Sidebar.jsx
+│   └── SubNavbar.jsx            ← LEGACY — do not import (pending deletion)
 ├── config/
 │   └── appConfig.js
+├── hooks/
+│   ├── useAutoGrow.js           ← textarea auto-height
+│   ├── useEscape.js             ← escape stack registration
+│   └── useScrollLock.js         ← nested-safe body scroll lock
+├── i18n/
+│   ├── index.js
+│   └── locales/ (en.json, ar.json)
 ├── layouts/
 │   ├── AppLayout.jsx
 │   ├── AuthLayout.jsx
 │   └── styles/
 ├── pages/
 │   ├── styles/
-│   ├── Login.jsx
-│   ├── Register.jsx
+│   ├── ComponentsPreview.jsx    ← /preview — living showcase of every common component
 │   ├── Dashboard.jsx
-│   └── Profile.jsx
+│   ├── Login.jsx
+│   ├── Profile.jsx
+│   └── Register.jsx
 ├── routes/
 │   ├── AppRoutes.jsx
 │   └── ProtectedRoute.jsx
-└── store/
-    ├── authStore.js
-    ├── useThemeStore.js
-    └── useLanguageStore.js
+├── store/
+│   ├── authStore.js
+│   ├── useLanguageStore.js
+│   ├── useThemeStore.js
+│   └── useToastStore.js
+└── utils/
+    ├── date.js                  ← toDate, formatRelative, formatDateTime, formatDate
+    ├── duration.js              ← parseDuration, formatDuration (seconds)
+    ├── escapeStack.js           ← single Escape handler for stacked overlays
+    └── file.js                  ← formatBytes, matchesAccept, getFileKind
 ```
+
+Page-specific components go in `src/components/<pageName>/` with their own `styles/` folder.
 
 ---
 
 ## Code Style Rules
 
 ### General
-- JavaScript only — never write TypeScript, never add type annotations
-- Functional components only — no class components
-- Named exports for stores and utilities, default exports for components and pages
-- Always use `const` — never `var`, avoid `let` unless reassignment is needed
-- Arrow functions for callbacks, regular `function` keyword for components
+- JavaScript only — never TypeScript, never type annotations
+- Functional components only
+- Default exports for components, pages, stores and hooks; named exports for API functions and utils
+- `const` always — no `var`, `let` only when reassigned
+- Regular `function` keyword for components, arrow functions for callbacks
+- No `console.log` in committed code
+- **All user-facing text through `t()`** — no hardcoded UI strings or aria-labels
+- Every component file starts with a JSDoc block listing its props
 
 ### Import Order
 ```js
 // 1. React
 import { useState, useEffect } from 'react'
 // 2. React Router
-import { useNavigate, useLocation } from 'react-router-dom'
-// 3. Third-party libraries
-import { BarChart } from 'recharts'
-// 4. Internal — stores
+import { useNavigate } from 'react-router-dom'
+// 3. Third-party (react-i18next, recharts, react-dom…)
+import { useTranslation } from 'react-i18next'
+// 4. Stores
 import useAuthStore from '../store/authStore'
-// 5. Internal — config
+// 5. Hooks
+import useEscape from '../hooks/useEscape'
+// 6. Config
 import appConfig from '../config/appConfig'
-// 6. Internal — API
-import { loginApi } from '../api/auth'
-// 7. Internal — common components
-import { FormButton, FormField } from '../components/common'
-// 8. Internal — other components
-import Navbar from '../components/Navbar'
-// 9. CSS — always last
-import './styles/ComponentName.css'
+// 7. Utils
+import { formatDuration } from '../utils/duration'
+// 8. API
+import { getProjectsApi } from '../api/projects'
+// 9. Common components
+import { FormButton, DataTable } from '../components/common'
+// 10. Other components
+import ProjectCard from '../components/projects/ProjectCard'
+// 11. CSS — always last
+import './styles/Projects.css'
 ```
 
 ### Component Structure
-```jsx
-// 1. Imports
-// 2. Constants / static data (outside component)
-// 3. Component function
-//    a. Store hooks
-//    b. Router hooks
-//    c. State declarations
-//    d. Derived values
-//    e. useEffect hooks
-//    f. Handler functions
-//    g. Return JSX
-// 4. Export
 ```
+1. Imports
+2. Constants / static data (outside component — inside only if it needs t())
+3. Component function
+   a. Store hooks  b. Router hooks  c. i18n hook  d. Refs  e. State
+   f. Derived values  g. Effects  h. Handlers  i. Return JSX
+4. Export
+```
+
+### onChange convention
+- `FormField` and `TextareaField` pass the **native event**
+- Every other field passes the **value**: `SelectField`, `CheckboxField`, `Toggle`, `RadioCardGroup`,
+  `NumberField`, `DurationField`, `TagInput`, `PromptComposer` (string)
 
 ---
 
 ## CSS Rules
 
-- One `.css` file per `.jsx` file — same name, same folder inside `styles/`
-- Never write inline styles — always CSS classes
-- Always use CSS variables — never hardcode colors, sizes, or font values
-- BEM-like class naming: `.block__element--modifier`
-- Every CSS file must have three layers in this order:
-  1. Base styles (light mode)
-  2. `[data-theme="dark"]` overrides
-  3. `.component--rtl` RTL overrides (if needed)
+- One `.css` file per `.jsx` file, same name, in the sibling `styles/` folder
+- Field components additionally import `FormField.css` for the shared label / error / helper shell
+- Always CSS variables — never hardcode colors, fonts or z-index values
+- BEM-like naming: `.block__element--modifier`
+- Layers in order: base (light) → `[data-theme="dark"]` overrides
+  (write `/* ═══ DARK MODE ═══ — handled by semantic tokens */` when no override is needed)
+- `prefers-reduced-motion` disables decorative animation (skeleton shimmer, indeterminate progress)
 
-### CSS Logical Properties (MANDATORY)
-Always use logical properties — never physical directional properties:
+### Inline styles — allowed only for
+1. Dynamic RTL values from store state (flex direction, text alignment)
+2. Runtime-computed geometry (Popover / Tooltip position, `useAutoGrow` height)
 
-| ❌ Physical (never use) | ✅ Logical (always use) |
+Everything else is a CSS class. Column widths, sizes and tones use modifier classes.
+
+### CSS Logical Properties (mandatory)
+
+| ❌ Physical | ✅ Logical |
 |---|---|
-| `margin-left` | `margin-inline-start` |
-| `margin-right` | `margin-inline-end` |
-| `padding-left` | `padding-inline-start` |
-| `padding-right` | `padding-inline-end` |
-| `left` | `inset-inline-start` |
-| `right` | `inset-inline-end` |
-| `border-left` | `border-inline-start` |
-| `border-right` | `border-inline-end` |
-| `border-top` | `border-block-start` |
-| `border-bottom` | `border-block-end` |
-| `margin-top` | `margin-block-start` |
-| `margin-bottom` | `margin-block-end` |
-
-This ensures automatic RTL support without extra CSS.
+| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
+| `margin-top` / `margin-bottom` | `margin-block-start` / `margin-block-end` |
+| `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
+| `left` / `right` | `inset-inline-start` / `inset-inline-end` |
+| `top` / `bottom` | `inset-block-start` / `inset-block-end` |
+| `border-left` / `border-right` | `border-inline-start` / `border-inline-end` |
+| `border-top` / `border-bottom` | `border-block-start` / `border-block-end` |
 
 ---
 
-## CSS Variables — Design System
+## Design Tokens (`src/index.css`)
 
-### Light Mode (`:root`)
+### Brand & surfaces
+| Token | Light | Dark |
+|---|---|---|
+| `--color-orange` / `--color-orange-2` | `#FF9900` / `#FFB347` | same |
+| `--color-navy` / `-2` / `-3` | `#0D1B2A` / `#162233` / `#1E2D40` | same |
+| `--color-darkest` | `#080F18` | same |
+| `--color-white` / `--color-off-white` | `#FFFFFF` / `#F8F9FB` | same |
+| `--bg-app` | `#F0F2F5` | `#0D1B2A` |
+| `--bg-surface` / `--bg-surface-2` | `#FFFFFF` / `#F8F9FB` | `#162233` / `#1E2D40` |
+| `--bg-sidebar` / `--bg-navbar` | `#FFFFFF` | `#111C29` |
+| `--border-color` / `--border-color-2` | navy 0.08 / 0.14 | white 0.07 / 0.1 |
+| `--text-primary` | `#0D1B2A` | `#F0F4F8` |
+| `--text-secondary` / `--text-muted` | navy 0.5 / 0.35 | **orange** 0.75 / 0.5 |
+| `--nav-link-hover-bg` / `--nav-link-active-bg` | navy 0.05 / orange 0.1 | white 0.06 / orange 0.12 |
+| `--auth-*` | auth card / input tokens | dark equivalents |
+
+### Semantic status colors
+`--color-danger` · `--color-success` · `--color-warning` · `--color-info`
+each with `-bg` and `-border` variants (e.g. `--color-danger-bg`, `--color-danger-border`).
+Light: `#DC2626` / `#059669` / `#B96D00` / `#2563EB` · Dark: `#F87171` / `#34D399` / `#FF9900` / `#60A5FA`.
+
+### Fields, focus, overlays
+| Token | Purpose |
+|---|---|
+| `--field-bg` / `--field-bg-focus` / `--field-border` | inputs, selects, composers |
+| `--focus-ring` | `0 0 0 3px rgba(255,153,0,0.12)` — all focus-visible states |
+| `--overlay-bg` | drawer and modal backdrop |
+| `--shadow-popover` / `--shadow-modal` | floating panels / dialogs |
+| `--skeleton-base` / `--skeleton-shine` | loading placeholders |
+| `--shadow-navbar` / `--shadow-sidebar` | layout chrome |
+
+### Typography & layout
 ```css
---color-orange:       #FF9900;
---color-orange-2:     #FFB347;
---color-navy:         #0D1B2A;
---color-navy-2:       #162233;
---color-navy-3:       #1E2D40;
---color-darkest:      #080F18;
---color-white:        #FFFFFF;
---color-off-white:    #F8F9FB;
-
---bg-app:             #F0F2F5;
---bg-surface:         #FFFFFF;
---bg-surface-2:       #F8F9FB;
---bg-sidebar:         #FFFFFF;
---bg-navbar:          #FFFFFF;
-
---border-color:       rgba(13, 27, 42, 0.08);
---border-color-2:     rgba(13, 27, 42, 0.14);
-
---text-primary:       #0D1B2A;
---text-secondary:     rgba(13, 27, 42, 0.5);
---text-muted:         rgba(13, 27, 42, 0.35);
-
---shadow-navbar:      0 1px 0 rgba(13, 27, 42, 0.08);
---shadow-sidebar:     2px 0 16px rgba(13, 27, 42, 0.06);
-
---nav-link-hover-bg:  rgba(13, 27, 42, 0.05);
---nav-link-active-bg: rgba(255, 153, 0, 0.1);
---nav-link-active-color: var(--color-orange);
-
---auth-card-bg:        #FFFFFF;
---auth-card-border:    rgba(13, 27, 42, 0.1);
---auth-input-bg:       #F4F5F7;
---auth-input-bg-focus: #FFFFFF;
---auth-input-border:   rgba(13, 27, 42, 0.12);
---auth-text-primary:   #0D1B2A;
---auth-text-secondary: rgba(13, 27, 42, 0.6);
---auth-text-muted:     rgba(13, 27, 42, 0.4);
-
 --font-heading: 'Syne', Arial Black, sans-serif;
 --font-body:    'DM Sans', Calibri, sans-serif;
-
---navbar-height:  56px;
---sidebar-width:  248px;
+--font-mono:    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;   /* IDs, hashes, models */
+--navbar-height: 56px;
+--sidebar-width: 248px;
 ```
 
-### Dark Mode (`[data-theme="dark"]`)
-```css
---bg-app:             #0D1B2A;
---bg-surface:         #162233;
---bg-surface-2:       #1E2D40;
---bg-sidebar:         #111C29;
---bg-navbar:          #111C29;
+### Z-index scale (tokens only)
+| Layer | Token | Value |
+|---|---|---|
+| Sidebar | `--z-sidebar` | 1000 |
+| Navbar | `--z-navbar` | 1100 |
+| Drawer overlay / panel | `--z-drawer-overlay` / `--z-drawer` | 1300 / 1301 |
+| Modal | `--z-modal` | 1400 |
+| ConfirmDialog | `--z-confirm` | 1500 |
+| Popover (selects, menus, mentions) | `--z-popover` | 1600 |
+| Tooltip | `--z-tooltip` | 1700 |
+| Toast | `--z-toast` | 9999 |
 
---border-color:       rgba(255, 255, 255, 0.07);
---border-color-2:     rgba(255, 255, 255, 0.1);
+---
 
---text-primary:       #F0F4F8;
---text-secondary:     rgba(255, 153, 0, 0.75);   ← orange in dark mode
---text-muted:         rgba(255, 153, 0, 0.5);    ← orange in dark mode
+## Language System
 
---auth-card-bg:        #162233;
---auth-card-border:    rgba(255, 255, 255, 0.08);
---auth-input-bg:       rgba(255, 255, 255, 0.06);
---auth-input-bg-focus: rgba(255, 255, 255, 0.09);
---auth-input-border:   rgba(255, 255, 255, 0.1);
---auth-text-primary:   #F0F4F8;
---auth-text-secondary: rgba(255, 255, 255, 0.6);
---auth-text-muted:     rgba(255, 255, 255, 0.35);
+```js
+// appConfig.js
+features: {
+  multiLanguage:  import.meta.env.VITE_MULTI_LANGUAGE === 'true',   // false for Studio
+  defaultLang:    import.meta.env.VITE_DEFAULT_LANG || 'en',
+  supportedLangs: ['en', 'ar'],
+}
 ```
+- `useLanguageStore` exposes `lang`, `isEnabled`, `setLang`, `toggleLang`; sets `<html lang/dir>` and syncs i18n
+- When `multiLanguage` is false: language forced to `defaultLang`, saved `migfora_lang` ignored, setters are no-ops
+- Navbar renders the language button only when `isEnabled`
+- The store is initialized by importing it in `main.jsx`
+- Never delete `useLanguageStore`, `ar.json` or RTL JSX branches
+
+### Translation rules
+- Every UI string → key in `en.json`; same key in `ar.json` (English placeholder is fine) — keep parity
+- Namespaces: `common` `navbar` `sidebar` `footer` `confirm_dialog` `not_found` `status` `select` `prompt`
+  `number` `duration` `tags` `upload` `file` `table` `copy` `time` `breadcrumbs`
+- `StatusBadge` translates `status.<STATUS>` — every new status needs a key
+
+### RTL rules (dormant but maintained)
+1. Spacing/positioning → logical properties
+2. Order swaps → JSX with `lang === 'ar'`
+3. Mirrored icons → `--rtl` modifier class from JSX (e.g. `breadcrumbs__separator--rtl`)
+4. **Never** `html[dir="rtl"]` or `[dir="rtl"]` selectors
+
+---
+
+## Theme System
+- `useThemeStore`: `theme`, `toggleTheme()`, `setTheme()` — sets `data-theme` on `<html>`, persists `migfora_theme`, first visit follows `prefers-color-scheme`
+- Components use semantic tokens; dark overrides only where tokens aren't enough
+
+---
+
+## Overlay System
+
+All floating UI follows these rules:
+
+| Need | Use |
+|---|---|
+| Side panel for create/edit forms, details, history | `Drawer` |
+| Centered dialog for non-destructive tasks | `Modal` |
+| Destructive / irreversible confirmation | `ConfirmDialog` |
+| Anchored floating panel (custom) | `Popover` |
+| Short hover/focus hint | `Tooltip` |
+| Transient feedback | `useToastStore().addToast()` |
+
+- Overlays render through portals to `document.body`
+- **Escape**: register with `useEscape(active, handler)` — the escape stack closes only the top-most layer.
+  Never add raw `keydown` Escape listeners.
+- **Scroll lock**: `useScrollLock(active)` — never set `document.body.style.overflow` directly
+- Clicks inside a `Popover` don't bubble to React parents (safe inside clickable rows)
+- Opening a ConfirmDialog from a Drawer or Modal is supported (it renders above both)
 
 ---
 
 ## Common Components
 
-All common components live in `src/components/common/` and are exported from `index.js`.
-
-### Import pattern
+Import from the barrel:
 ```js
-import { FormButton, FormField, FormAlert, Drawer, PageHeader } from '../components/common'
+import { FormButton, SelectField, DataTable, Modal } from '../components/common'
 ```
+Every component is showcased on `/preview` (`ComponentsPreview.jsx`).
 
-### Component Reference
+### Actions & feedback
 
-#### `FormButton` — MIGFORA standard button
-```jsx
-<FormButton
-  variant="primary"      // 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline'
-  type="submit"          // 'submit' | 'button' | 'reset'
-  loading={false}        // shows loadingText when true, disables button
-  loadingText="Saving…"
-  disabled={false}
-  fullWidth={false}
-  onClick={handler}
->
-  Button Label
-</FormButton>
-```
+#### `FormButton`
+`variant` `'primary'|'secondary'|'danger'|'ghost'|'outline'` · `type` (default `'button'`) · `loading` · `loadingText` · `disabled` · `fullWidth` · `onClick`
 
-#### Button Variant Usage Guide
-| Variant | When to use | Example locations |
+| Variant | Use | Examples |
 |---|---|---|
-| `primary` | Single most important CTA | Form submit, Add Target, Create Scan |
-| `secondary` | Significant but not main CTA | Export, Duplicate, Run Again |
-| `outline` | Standalone page-level actions | Back, Filter, Import, Refresh |
-| `ghost` | Low-priority in tight spaces | Cancel in drawer footer, Clear, Skip |
-| `danger` | Destructive actions only — always with ConfirmDialog | Delete, Remove, Revoke |
+| `primary` | Single main CTA | Submit, Create, Generate |
+| `secondary` | Significant, not main | Export, Duplicate, Run again |
+| `outline` | Page-level actions | Back, Filter, Compare, Logout |
+| `ghost` | Low priority, tight spaces | Cancel in footers, Clear, Skip |
+| `danger` | Destructive — always with `ConfirmDialog` | Delete, Revoke, Reject |
 
-**Rules:**
-- Never put two `primary` buttons next to each other
-- Never use `danger` without a `ConfirmDialog`
-- Never use `ghost` as the only button on a page
-
-**By location:**
 | Location | Buttons |
 |---|---|
 | Page header | `primary` + `outline` |
-| Drawer footer | `primary` + `ghost` |
-| Table row actions | `outline` + `danger` |
-| Form submit | `primary` + `ghost` (cancel) |
-| Confirmation dialog | `danger` + `ghost` |
-| Navbar | `outline` (logout) |
+| Drawer / Modal footer | `primary` + `ghost` |
+| Table row actions | `DropdownMenu` (danger items open ConfirmDialog) |
+| Confirm dialog | built in (`ghost` + `danger`/`primary`) |
 | Empty state CTA | `primary` |
 
----
+Rules: never two `primary` side by side · never `danger` without `ConfirmDialog` · never `ghost` as the only button on a page.
 
-#### `FormField` — label + input unit
-```jsx
-<FormField
-  label="Email"
-  name="email"
-  type="email"           // default: 'text'
-  value={val}
-  onChange={handler}
-  placeholder="you@example.com"
-  error="Required"       // shows red border + message below
-  required={true}        // shows orange asterisk
-  disabled={false}
-  minLength={8}
-/>
-```
+#### `DropdownMenu` — action menu
+`items` `[{ key, label, icon?, onClick, danger?, disabled?, hint? } | { key, divider: true }]` · `label` (aria, default "More actions") · `placement` `'bottom-end'|'bottom-start'` · `disabled` · `children` (text trigger; default kebab icon).
+Keyboard: arrows, Home/End, Escape. Danger items must open a `ConfirmDialog`.
 
-#### `FormAlert` — form-level banner
-```jsx
-<FormAlert type="error"   message={error}   />
-<FormAlert type="success" message={success} />
-// Renders nothing if message is empty
-```
-
-#### `Drawer` — slide-in panel shell
-```jsx
-<Drawer
-  open={isOpen}
-  title="Edit Profile"
-  onClose={onClose}
-  size="sm"              // 'sm' (360px) | 'md' (440px) | 'lg' (600px)
-  error={errorString}    // renders error banner in header area
-  footer={
-    <>
-      <FormButton variant="ghost" onClick={onClose} fullWidth>Cancel</FormButton>
-      <FormButton variant="primary" onClick={handleSave} fullWidth>Save</FormButton>
-    </>
-  }
->
-  {/* form fields go here */}
-</Drawer>
-```
-- Drawer owns: portal, overlay, scroll lock, Escape key, transitions
-- Consumer owns: form, fields, footer buttons, submit logic
-- No `<form>` tag inside Drawer — consumer wraps their own
-
-#### `ConfirmDialog` — destructive action confirmation
-```jsx
-<ConfirmDialog
-  isOpen={open}
-  title="Delete target"
-  message="This action cannot be undone."
-  confirmLabel="Delete"
-  isDanger={true}
-  onConfirm={handleDelete}
-  onCancel={() => setOpen(false)}
-/>
-```
-
-#### `PageHeader` — page title + action button
-```jsx
-<PageHeader
-  title="Targets"
-  subtitle="Manage your scan targets."
-  action={<FormButton variant="primary">+ Add Target</FormButton>}
-/>
-```
-- Reads `lang` from `useLanguageStore` internally — handles RTL automatically
-- No need to pass `lang` or `isRTL` as props
-
-#### `Pagination`
-```jsx
-<Pagination
-  page={page}              // 0-indexed
-  totalPages={8}
-  totalElements={76}
-  itemLabel="scans"
-  onPageChange={setPage}
-/>
-```
+#### `FormAlert`
+`type` `'error'|'success'` · `message` (renders nothing when empty)
 
 #### `StatusBadge`
-```jsx
-<StatusBadge status="DONE" />
-<StatusBadge status="FAILED" label="Custom Label" />
-```
-Built-in statuses: `DONE` `ACTIVE` `COMPLETED` `PASSED` → success green  
-`SCHEDULED` `PENDING` `RUNNING` → warning orange  
-`FAILED` `MISSED` `CRITICAL` `HIGH` → danger red  
-`MEDIUM` → info blue | `DRAFT` `LOW` `UNKNOWN` → neutral  
-`BASIC` `GROWTH` `ENTERPRISE` → package variants  
+`status` · `label` (override). Unknown → neutral.
 
-#### `EmptyState`
-```jsx
-<EmptyState
-  title="No targets yet"
-  subtitle="Add your first target to start scanning."
-  action={<FormButton variant="primary">+ Add Target</FormButton>}
-  icon={<svg>...</svg>}   // optional custom icon
-/>
-```
+| Variant | Statuses |
+|---|---|
+| success | DONE ACTIVE COMPLETED PASSED APPROVED |
+| warning | SCHEDULED PENDING RUNNING UPLOADING CHANGES_REQUESTED NEEDS_REVALIDATION |
+| danger | FAILED MISSED CRITICAL HIGH REJECTED |
+| info | MEDIUM IN_REVIEW WAITING |
+| neutral | DRAFT UNKNOWN LOW QUEUED CANCELLED SUPERSEDED RETIRED |
+| locked (navy + lock icon) | LOCKED |
+| role (outline, no dot) | OWNER VIEW EDIT REVIEW |
+| format (orange outline, no dot) | FILM SERIES SHORT_STORIES |
+| package (legacy) | BASIC GROWTH ENTERPRISE |
 
 #### `Spinner`
-```jsx
-<Spinner size="md" color="orange" label="Loading…" />
-// size: 'sm' | 'md' | 'lg'
-// color: 'orange' | 'white' | 'navy'
-```
+`size` `'sm'|'md'|'lg'` · `color` `'orange'|'white'|'navy'` · `label`
 
-#### `SearchInput`
-```jsx
-<SearchInput
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  onClear={() => setSearch('')}
-  placeholder="Search targets…"
-/>
-```
+#### `ProgressBar`
+`value` · `max` (100) · `label` · `valueLabel` (e.g. "$420 / $1,000") · `showValue` · `tone` `'orange'|'success'|'warning'|'danger'|'info'` · `size` `'md'|'sm'` · `indeterminate`
 
-#### `Tabs`
-```jsx
-const TABS = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'findings', label: 'Findings', count: 12 },
-]
-<Tabs tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />
-{activeTab === 'overview' && <Overview />}
-```
+#### `Skeleton`
+`variant` `'text'|'circle'|'rect'` · `size` (text: sm/md/lg/full · circle: sm/md/lg · rect height: sm/md/lg/full) · `lines` (text). Set `aria-busy` on the loading region.
 
-#### `SectionDivider`
-```jsx
-<SectionDivider label="Security Settings" />
-<SectionDivider />  // line only, no label
-```
+#### `EmptyState`
+`title` · `subtitle` · `action` · `icon`
+
+#### `ToastRenderer` + `useToastStore`
+Mounted once in AppLayout. `addToast(message, 'success'|'error'|'info', durationMs = 3500)`.
+
+### Form fields
+All fields share: `label` · `name` (unique per page → id `field-${name}`) · `error` · `required` · `disabled`.
+Helper text uses `.form-field__helper`.
+
+#### `FormField` — text input (event)
+`type` · `value` · `onChange(event)` · `placeholder` · `minLength` · `autoComplete`
+
+#### `TextareaField` — auto-growing (event)
+`value` · `onChange(event)` · `minRows` (3) · `maxRows` (12) · `maxLength` (soft limit, counter turns red) · `showCount` · `helperText`
 
 #### `PasswordInput`
-```jsx
-<PasswordInput
-  value={pass}
-  onChange={(e) => setPass(e.target.value)}
-  placeholder="Enter password"
-  className="auth-field__input"
-/>
-```
+`id` · `value` · `onChange(event)` · `placeholder` · `className` · `autoComplete` · `autoFocus` (no label — wrap your own)
 
-#### `ToastRenderer` — mount once in `AppLayout`
-```jsx
-// In AppLayout.jsx:
-import ToastRenderer from '../components/common/ToastRenderer'
-<ToastRenderer />
+#### `SearchInput`
+`value` · `onChange(event)` · `onClear` · `placeholder`
 
-// Usage anywhere:
-import useToastStore from '../store/useToastStore'
-const { addToast } = useToastStore()
-addToast('Saved successfully.', 'success')  // 'success' | 'error' | 'info'
-```
+#### `SelectField` — dropdown (value)
+`value` (single) or array (`multiple`) · `onChange(value, option|options)` · `options` `[{ value, label, description?, icon?, disabled? }]` · `multiple` (chips) · `searchable` `'auto'` (>8 options) `|true|false` · `placeholder`
+
+#### `CheckboxField` (value)
+`checked` · `onChange(checked, event)` · `label` · `description` · `indeterminate` · `ariaLabel`
+
+#### `Toggle` — switch (value)
+`checked` · `onChange(checked)` · `label` · `description` · `size` `'md'|'sm'` · `layout` `'inline'|'row'` · `ariaLabel`
+
+#### `RadioCardGroup` — choice cards (value)
+`value` · `onChange(value, option)` · `options` `[{ value, label, description?, icon?, meta?, disabled? }]` · `columns` `'auto'|2|3|4`
+
+#### `NumberField` — steppers (value)
+`value` (number|null) · `onChange(number|null)` · `min` · `max` · `step` (fractional → decimals) · `suffix` · `helperText`. Clamps on blur and step; ArrowUp/Down step.
+
+#### `DurationField` — seconds (value)
+`value` (seconds|null) · `onChange(seconds|null)` · `format` `'auto'|'mm:ss'|'hh:mm:ss'` · `plainUnit` `'minutes'|'seconds'` · `min` · `max`. Accepts `1:30:00`, `45:00`, `90`, `1h 30m`, `45m`, `30s`.
+
+#### `TagInput` (value)
+`value` (string[]) · `onChange(string[])` · `suggestions` · `maxTags` · `maxTagLength` (40) · `helperText`. Enter/comma adds, Backspace removes last, paste splits, duplicates ignored.
+
+#### `PromptComposer` — AI instruction input (string)
+`value`/`onChange(text)` (optional controlled) · `defaultValue` · `onSend(text)` (return `false` to keep text) · `onStop` · `status` `'idle'|'sending'|'streaming'` · `variant` `'full'|'compact'` · `maxLength` (blocks send above) · `disabled` · `disabledReason` · `context` `[{ id, label? }]` · `onRemoveContext(id)` · `mentionOptions` `[{ value, label }]` (enables `@`) · `onAddContext(option)` · `toolbarStart` · `toolbarEnd` · `clearOnSend`.
+Enter sends · Shift+Enter new line · Escape stops streaming.
+
+#### `UploadDropzone` — validates only
+`onFiles(File[])` · `onReject([{ file, reason: 'type'|'size'|'count' }])` · `accept` · `multiple` (true) · `maxSize` (bytes) · `maxFiles` · `title` · `hint` · `compact` · `disabled`.
+The page uploads through its API file and renders `FileItem` rows.
+
+#### `FileItem`
+`name` · `size` · `type` · `previewUrl` (consumer creates/revokes object URLs) · `status` `'pending'|'uploading'|'done'|'error'` · `progress` · `error` · `meta` (mono, e.g. reference ID) · `onRemove` · `onRetry`.
+Removing a file stored on the server needs a `ConfirmDialog`.
+
+### Overlays
+
+#### `Drawer`
+`open` · `title` · `subtitle` · `onClose` · `size` `'sm' 360|'md' 440|'lg' 600|'xl' 860` · `error` · `footer`.
+Drawer owns portal, overlay, scroll lock, Escape, transition. No `<form>` inside — the consumer wraps its own.
+
+#### `Modal`
+`open` · `onClose` · `title` · `subtitle` · `size` `'sm' 400|'md' 560|'lg' 760|'xl' 960` · `footer` · `error` · `closeOnOverlay` (true) · `showClose` (true) · `layer` `'modal'|'confirm'` · `ariaLabel` · `className`.
+Focuses the first body field (or `[data-autofocus]`), traps Tab, restores focus on close.
+
+#### `ConfirmDialog`
+`isOpen` · `title` · `message` · `onConfirm` · `onCancel` · `confirmLabel` · `cancelLabel` · `isDanger` (true) · `loading` · `requireText` (user types it to enable confirm — use for lock, release, delete project).
+Built on Modal (`layer="confirm"`); Cancel is focused first.
+
+#### `Popover`
+`open` · `anchorRef` · `onClose(reason: 'outside'|'escape')` · `placement` `'bottom-start'|'bottom-end'` · `matchWidth` · `offset` · `className`. Flips upward when there's no room. Base for SelectField, DropdownMenu, TagInput and mentions.
+
+#### `Tooltip`
+`content` · `placement` `'top'|'bottom'` · `delay` (300) · `disabled` · `children` (trigger).
+Use for disabled reasons, full IDs and timestamps. Never the only place essential info lives (not visible on touch).
+
+### Layout & display
+
+#### `PageHeader`
+`title` · `subtitle` · `action` · `breadcrumbs` `[{ label, to? }]` · `meta` (node under title: ID, badges, version, time)
+
+#### `Breadcrumbs`
+`items` `[{ label, to? }]` (last = current) · `maxItems` (4 — middle collapses to "…" with tooltip)
+
+#### `Card`
+`title` · `subtitle` · `actions` · `footer` · `padding` `'md'|'sm'|'none'` (none around a DataTable) · `variant` `'default'|'muted'|'outlined'` · `onClick` (whole card clickable) · `className`
+
+#### `Tabs`
+`tabs` `[{ key, label, count? }]` · `activeTab` · `onChange(key)`
+
+#### `SectionDivider`
+`label` (optional)
+
+#### `KeyValueList`
+`items` `[{ key, label, value, mono?, hidden? }]` · `layout` `'grid'|'rows'` · `columns` `'auto'|1|2|3` · `emptyValue` ('—')
+
+#### `Avatar` / `AvatarGroup`
+Avatar: `name` · `src` · `size` `'xs'|'sm'|'md'|'lg'` · `showTooltip` (stable color per name, initials fallback).
+AvatarGroup: `users` `[{ id?, name, src? }]` · `max` (4) · `size` ('sm').
+
+#### `CopyableText`
+`value` · `children` (display) · `mono` (true) · `size` `'sm'|'md'`
+
+#### `RelativeTime`
+`value` (ISO|Date|timestamp) · `updateInterval` (60000) · `showTooltip` (full timestamp)
+
+#### `NotFound`
+Full-page 404 on the `*` route — not in the barrel.
+
+### Data
+
+#### `DataTable`
+- `columns` `[{ key, header, render?(row), sortable?, sortValue?(row), align?: 'start'|'center'|'end', className? }]`
+- `rows` · `rowKey` ('id' or fn) · `name` (checkbox id prefix)
+- `loading` (skeleton rows when empty, dimmed when rows exist) · `skeletonRows` (5) · `emptyState`
+- `sort` + `onSortChange` → server sort; without `onSortChange` → client sort
+- `selectable` · `selectedKeys` · `onSelectionChange`
+- `onRowClick(row)` · `rowActions(row)` (e.g. `<DropdownMenu />`) · `footer` (e.g. `<Pagination />`)
+- Column widths: `column.className` sized in page CSS — never inline
+
+#### `Pagination` (0-indexed)
+`page` · `totalPages` · `totalElements` · `itemLabel` · `onPageChange`
 
 ---
 
 ## Stores
 
-### `authStore.js`
-```js
-const { token, user, setAuth, clearAuth } = useAuthStore()
-setAuth(token, user)   // saves to Zustand + localStorage
-clearAuth()            // removes from Zustand + localStorage
-```
+| Store | API | Persistence |
+|---|---|---|
+| `authStore` | `token`, `user`, `setAuth(token, user)`, `clearAuth()` | `token`, `user` |
+| `useThemeStore` | `theme`, `toggleTheme()`, `setTheme()` | `migfora_theme` |
+| `useLanguageStore` | `lang`, `isEnabled`, `toggleLang()`, `setLang()` | `migfora_lang` (only when enabled) |
+| `useToastStore` | `toasts`, `addToast(msg, type, duration)`, `removeToast(id)` | none |
 
-### `useThemeStore.js`
-```js
-const { theme, toggleTheme, setTheme } = useThemeStore()
-// theme: 'light' | 'dark'
-// Applies data-theme="dark" to <html> automatically
-// Persists to localStorage key: migfora_theme
-// Reads system preference on first visit
-```
+New stores: `src/store/useName.js`, zustand `create()`, default export, persisted keys prefixed `migfora_`.
 
-### `useLanguageStore.js`
-```js
-const { lang, toggleLang, setLang } = useLanguageStore()
-// lang: 'en' | 'ar'
-// Applies dir="rtl" and lang="ar" to <html> automatically
-// Persists to localStorage key: migfora_lang
-```
+## Hooks
+| Hook | Purpose |
+|---|---|
+| `useAutoGrow(ref, value, { minRows, maxRows })` | textarea height (CSS must set px line-height) |
+| `useEscape(active, handler)` | register on the escape stack |
+| `useScrollLock(active)` | nested-safe body scroll lock |
 
-### `useToastStore.js`
-```js
-const { addToast, removeToast } = useToastStore()
-addToast('Message', 'success', 3500)  // message, type, duration(ms)
-```
+## Utils
+| File | Exports |
+|---|---|
+| `date.js` | `toDate`, `formatRelative`, `formatDateTime`, `formatDate` (Intl, current i18n language) |
+| `duration.js` | `parseDuration(raw, plainUnit)` → seconds / null / NaN · `formatDuration(seconds, format)` |
+| `file.js` | `formatBytes`, `matchesAccept(file, accept)`, `getFileKind(type, name)` |
+| `escapeStack.js` | `pushEscape(handler)` → cleanup (use through `useEscape`) |
 
----
-
-## Theme System
-
-- Dark/light mode via `data-theme` attribute on `<html>`
-- Toggle with `useThemeStore().toggleTheme()`
-- Every CSS file must support both modes:
-```css
-/* Light mode (default) */
-.component { color: var(--text-primary); }
-
-/* Dark mode */
-[data-theme="dark"] .component { /* overrides if needed */ }
-```
-- Use semantic variables (`--text-primary`, `--bg-surface`) — never hardcode colors
-- Dark mode text identity: `--text-secondary` and `--text-muted` are orange-tinted in dark mode
-
----
-
-## RTL / Language System
-
-### Rules
-1. **CSS Logical Properties** handle spacing/positioning automatically — no extra CSS needed
-2. **Flex order/direction changes** — handle in JSX using `lang === 'ar'` check, not CSS selectors
-3. **Never use `html[dir="rtl"]` CSS selectors** — they are unreliable in this setup
-4. **Never use `[dir="rtl"]` CSS selectors** — same issue
-
-### Pattern for components needing flex-direction swap
-```jsx
-import useLanguageStore from '../../store/useLanguageStore'
-
-function MyComponent() {
-  const { lang } = useLanguageStore()
-  const isRTL = lang === 'ar'
-
-  return (
-    <div style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
-      {isRTL ? (
-        <> <ActionButton /> <Title /> </>
-      ) : (
-        <> <Title /> <ActionButton /> </>
-      )}
-    </div>
-  )
-}
-```
-
-### Inline styles exception
-Inline styles are allowed ONLY for dynamic RTL values driven by store state.  
-Static design values must always be in CSS files.
-
-### Arrow/directional indicators
-```jsx
-const { lang } = useLanguageStore()
-<span>{lang === 'ar' ? '→' : '←'} Back</span>
-```
+**Durations are always stored in seconds.** Dates are shown with `RelativeTime` or `formatDateTime`.
 
 ---
 
 ## Layout System
 
-### AppLayout behavior
-- Sidebar default: **open** (user closes manually)
-- Sidebar state saved in localStorage key: `migfora_sidebar_open`
-- Open: `248px` wide with icon + label
-- Closed: `52px` icon rail (icons only, no labels)
-- Main content uses `margin-inline-start` — shifts with sidebar in both LTR and RTL
-- No SubNavbar — removed. Toggle lives in Navbar.
+### AppLayout
+- Renders `Navbar`, `Sidebar`, `<main className="app-layout__main">`, `ToastRenderer` (`Footer` commented out)
+- Sidebar default **open**, persisted in `migfora_sidebar_open`; 248px open / 52px icon rail
+- Main content offset uses `margin-inline-start`
 
-### Page layouts
-| Page type | Layout | Auth required |
-|---|---|---|
-| Login | AuthLayout | No |
-| Register | AuthLayout | No |
-| All other pages | AppLayout | Yes (ProtectedRoute) |
+### AuthLayout
+No navbar/sidebar/footer; floating theme toggle; card uses `--auth-*` tokens.
 
-### Content spacing
-Every page component should start with:
-```css
-.page-name {
-  padding: 32px;
-}
-```
+### Navbar (fixed, 56px)
+Hamburger + logo | language button (only when `isEnabled`) + theme toggle + Logout (`outline`) / Login (`primary`).
 
-### Z-index stack
-| Layer | z-index |
-|---|---|
-| Navbar | 1100 |
-| Sidebar | 1000 |
-| Drawer overlay | 1300 |
-| Drawer panel | 1301 |
-| ConfirmDialog overlay | 200 |
-| ConfirmDialog | 201 |
-| Toast | 9999 |
+### Sidebar
+- `NAV_ITEMS` defined **inside** the component (labels via `t()`), shape `[{ section, items: [{ label, path, icon }] }]`
+- Icons: inline SVG 17×17, `stroke="currentColor"`, `strokeWidth=2`, inside `.sidebar__link-icon`
+- Rail mode hides labels and shows `title` tooltips; Escape closes when open
+- Bottom: `SidebarProfile` + copyright
+
+### Page content
+Each page root class has `padding: 32px`. Structure: `PageHeader` → content (`Card`, `DataTable`, `Tabs`…).
 
 ---
 
-## Task Checklists
+## Routing
 
-### Adding a New Page
-```
-□ Create src/pages/NewPage.jsx
-□ Create src/pages/styles/NewPage.css
-□ Add route in src/routes/AppRoutes.jsx (wrap with ProtectedRoute + AppLayout)
-□ Add to NAV_ITEMS in src/components/Sidebar.jsx
-□ Create src/api/newPage.js (with MOCK_ENABLED pattern)
-□ If page has sub-components → create src/components/newPage/ folder
-□ Each sub-component gets its own .jsx + styles/ folder
-□ Use PageHeader for the page title + action button
-□ Use EmptyState for zero-data states
-□ Use ToastRenderer (already in AppLayout) for success/error feedback
-```
+| Path | Layout | Protected |
+|---|---|---|
+| `/login`, `/register` | AuthLayout | No |
+| `/dashboard`, `/profile`, `/preview` | AppLayout | Yes |
+| `*` | `NotFound` | No |
 
-### Adding a New API Domain
-```
-□ Create src/api/domainName.js
-□ Import axiosInstance from './axiosInstance'
-□ Add MOCK_ENABLED = true flag at top
-□ Write mock functions with 800ms setTimeout delay
-□ Export real functions that check MOCK_ENABLED before calling axiosInstance
-□ Use appConfig.auth.messageKey for error messages
-```
-
-### Adding a New Store
-```
-□ Create src/store/useStoreName.js
-□ Use zustand create()
-□ Define initial state
-□ Define set actions
-□ Export as default useStoreName
-```
-
-### Adding a New Sidebar Item
-```
-□ Open src/components/Sidebar.jsx
-□ Find NAV_ITEMS array
-□ Add to correct section: { label, path, icon }
-□ Icon must be inline SVG (width=17, height=17, stroke="currentColor", strokeWidth=2)
-□ Icon goes inside <span className="sidebar__link-icon">
-```
-
-### Adding a New Common Component
-```
-□ Create src/components/common/ComponentName.jsx
-□ Create src/components/common/styles/ComponentName.css
-□ Export default at bottom of JSX file
-□ Add to src/components/common/index.js barrel export
-□ CSS must have: base styles + [data-theme="dark"] layer + RTL layer if needed
-□ Use CSS logical properties — no physical directional properties
-□ Use CSS variables — no hardcoded values
-```
+New routes go above `*`, wrapped in `<ProtectedRoute><AppLayout>…</AppLayout></ProtectedRoute>`.
 
 ---
 
@@ -644,133 +552,175 @@ import axiosInstance from './axiosInstance'
 // ─── MOCK ─────────────────────────────────────────────────────
 const MOCK_ENABLED = true
 
-const mockFunctionName = (data) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({ data: { ... } })
-    }, 800)
+const mockGetProjects = () =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve({ data: { items: [], totalElements: 0, totalPages: 0 } }), 800)
   })
-}
 // ──────────────────────────────────────────────────────────────
 
-export const apiFunctionName = (data) => {
-  if (MOCK_ENABLED) return mockFunctionName(data)
-  return axiosInstance.post('/endpoint', data)
+export const getProjectsApi = (params) => {
+  if (MOCK_ENABLED) return mockGetProjects(params)
+  return axiosInstance.get('/projects', { params })
 }
 ```
+- Mock errors use the axios shape: `reject({ response: { data: { message } } })`
+- Paginated responses: `items`, `totalElements`, `totalPages`; page index 0-based
+- `axiosInstance`: `baseURL` from env, Bearer token on requests, 401 → clear auth + redirect to `/login`
 
----
-
-## Response Handling
-
-Always use `appConfig` keys — never hardcode response field names:
-
+### Response & error handling
 ```js
-import appConfig from '../config/appConfig'
-
 const token = data[appConfig.auth.tokenKey]
 const user  = data[appConfig.auth.userKey]
-const msg   = err.response?.data?.[appConfig.auth.messageKey]
-```
 
----
-
-## Error Handling Pattern
-
-```js
 try {
   const res = await someApi(body)
-  addToast(res.data?.[appConfig.auth.messageKey] || 'Saved successfully.', 'success')
+  addToast(res.data?.[appConfig.auth.messageKey] || t('common.saved'), 'success')
 } catch (err) {
-  const msg = err.response?.data?.[appConfig.auth.messageKey] || 'Something went wrong.'
-  setError(msg)  // or addToast(msg, 'error')
+  setError(err.response?.data?.[appConfig.auth.messageKey] || t('common.error'))
 } finally {
   setLoading(false)
 }
 ```
 
----
+### appConfig
+```js
+{
+  loginIdentifier: 'username',                       // 'email' | 'username' | 'phone'
+  features: { multiLanguage, defaultLang, supportedLangs },
+  auth: { tokenKey: 'token', userKey: 'user', messageKey: 'message' },
+}
+```
 
-## Navbar
-
-Contains (left to right in LTR):
-- Hamburger toggle → sidebar open/close
-- MIGFORA logo
-- [right side] Language toggle (flag + code)
-- Theme toggle (sun/moon icon)
-- Logout / Login button
-
-In RTL the order reverses — handled via JSX conditional, not CSS.
-
----
-
-## Sidebar
-
-- Logo in header (hidden in icon-rail mode)
-- Nav items with icon + label (label hidden in icon-rail mode)
-- `NAV_ITEMS` grouped by section with `{ section, items[] }`
-- Each item: `{ label, path, icon }`
-- `SidebarProfile` at bottom — shows avatar + name + email (collapsed to avatar in rail mode)
-- Copyright line at very bottom
+### Connecting the real backend
+1. `MOCK_ENABLED = false` in each `src/api/*.js`
+2. Set `VITE_API_BASE_URL`
+3. Align `appConfig.auth` keys with the backend response
+4. Refresh tokens → extend the axios response interceptor
 
 ---
 
-## AuthLayout
+## Task Checklists
 
-- No navbar, no sidebar, no footer
-- Theme toggle button inside the auth card (bottom)
-- Always dark background (`--color-darkest`)
-- Card uses `--auth-*` variables for theme-aware colors
+### New page
+```
+□ src/pages/NewPage.jsx + src/pages/styles/NewPage.css (root class, padding 32px)
+□ Route in AppRoutes.jsx (ProtectedRoute + AppLayout), above *
+□ Sidebar item in NAV_ITEMS (label via t())
+□ Locale keys in en.json (+ ar.json parity)
+□ src/api/newPage.js with MOCK_ENABLED
+□ PageHeader (breadcrumbs/meta where useful), EmptyState for zero data, Skeleton/loading for fetches
+□ Page sub-components → src/components/newPage/ with styles/
+□ Reuse common components — no one-off buttons, inputs, tables or dialogs
+```
+
+### New API domain
+```
+□ src/api/domainName.js, import axiosInstance
+□ MOCK_ENABLED + mocks with 800ms delay and axios-shaped errors
+□ Exported functions check MOCK_ENABLED first
+□ Messages via appConfig.auth.messageKey
+```
+
+### New store
+```
+□ src/store/useStoreName.js with zustand create()
+□ Initial state + actions; persisted keys prefixed migfora_
+□ export default
+```
+
+### New sidebar item
+```
+□ NAV_ITEMS inside Sidebar.jsx → correct section
+□ { label: t('sidebar.nav.key'), path, icon } — SVG 17×17, stroke currentColor, strokeWidth 2
+□ Locale key added
+```
+
+### New common component (only when a page needs it)
+```
+□ src/components/common/Name.jsx + styles/Name.css, JSDoc props block
+□ Default export + index.js barrel
+□ Text via t(); tokens only; logical properties; base + dark layer
+□ Floating UI → Popover; overlays → useEscape + useScrollLock + z-index token
+□ Field → FormField shell (label, error, helper) and the onChange convention
+□ Section on /preview
+□ Document it in this file
+```
+
+### New status value
+```
+□ STATUS_VARIANT_MAP in StatusBadge.jsx
+□ status.<STATUS> locale key
+□ Add to /preview
+```
 
 ---
 
-## Future Backend Integration (Spring Boot)
+## Known Gaps (legacy — do not copy into new code)
 
-When connecting to real backend:
-1. Set `MOCK_ENABLED = false` in all `src/api/*.js` files
-2. Update `VITE_API_BASE_URL` in `.env`
-3. Update `appConfig.auth` keys to match actual response fields
-4. If backend uses refresh tokens → update `axiosInstance.js` response interceptor
+| # | Issue | Where | Target |
+|---|---|---|---|
+| 1 | `[dir="rtl"]` selectors | index.css (layout/navbar/sidebar/page-header/profile), FormField.css, Navbar.css, Sidebar.css | Remove; logical properties + JSX swaps |
+| 2 | Physical properties | index.css RTL block, PasswordInput.css (`right`, `padding-right`) | Convert to logical |
+| 3 | Hardcoded status colors in older components | FormAlert, ToastRenderer, FormField error, FormButton danger, PasswordInput, SearchInput | Switch to `--color-*` and `--field-*` tokens |
+| 4 | Literal z-index values | Navbar.css (1100), Sidebar.css (1000), ToastRenderer.css (9999) | Use `--z-*` tokens |
+| 5 | axiosInstance reads/writes localStorage directly | axiosInstance.js | `useAuthStore.getState()` / `clearAuth()` |
+| 6 | `console.log` and `key={lang}` remount | Navbar.jsx | Remove |
+| 7 | `useLanguageStore()` called only for init | AppLayout.jsx | Remove (init now in main.jsx) |
+| 8 | SubNavbar files unused | components/SubNavbar.jsx, styles/SubNavbar.css | Delete |
+| 9 | Hardcoded English aria-labels | PasswordInput | Use `t()` |
+| 10 | TextareaField uses its own helper class | TextareaField | Switch to `.form-field__helper` |
 
 ---
 
 ## What Claude Must Never Do
 
-- Never use TypeScript or add type annotations
-- Never use inline styles for static design values — CSS classes only
-- Inline styles are allowed ONLY for dynamic RTL values from store state
-- Never hardcode colors, fonts, or layout values — CSS variables always
-- Never use `fetch` directly — always use `axiosInstance`
-- Never use Tailwind, Bootstrap, or any CSS framework
-- Never use `html[dir="rtl"]` or `[dir="rtl"]` CSS selectors
-- Never use physical CSS properties (`margin-left`, `left`, `border-right`) — logical properties only
-- Never read/write auth state directly from localStorage — always through `useAuthStore`
-- Never create a page without its own `styles/` CSS file
-- Never create an API file without the `MOCK_ENABLED` pattern
-- Never hardcode backend response keys — always use `appConfig.auth.*`
-- Never add class components — functional components only
-- Never use `var` for variable declarations
-- Never put two `primary` buttons next to each other
-- Never use `danger` button without a `ConfirmDialog`
-- Never add a new common component without updating `index.js` barrel export
+- Never use TypeScript or type annotations
+- Never hardcode UI strings or aria-labels — always `t()`
+- Never hardcode colors, fonts or z-index — tokens always
+- Never use inline styles except dynamic RTL values and runtime-computed geometry
+- Never use physical CSS properties or `[dir="rtl"]` selectors
+- Never use `fetch` or raw `axios` — always `axiosInstance`
+- Never use Tailwind, Bootstrap or any CSS framework
+- Never read/write auth in localStorage from new code — use `useAuthStore`
+- Never delete language/RTL code — gate it with `appConfig.features.multiLanguage`
+- Never add raw Escape listeners or set body overflow — use `useEscape` / `useScrollLock`
+- Never build a one-off button, input, select, table, dialog or tooltip when a common component exists
+- Never create a page without its own CSS file, or an API file without `MOCK_ENABLED`
+- Never hardcode backend response keys — use `appConfig.auth.*`
+- Never put two `primary` buttons side by side, or use `danger` without `ConfirmDialog`
+- Never add a common component without updating `index.js`, `/preview` and this file
+- Never store durations in anything other than seconds
+- Never import `SubNavbar`
 
 ---
 
 ## Quick Reference
 
 ```
-New page?              → checklist: page + css + route + sidebar + api
-New API?               → src/api/name.js with MOCK_ENABLED pattern
-New store?             → src/store/useName.js with zustand create()
-New sidebar item?      → NAV_ITEMS in Sidebar.jsx
-New common component?  → common/ + styles/ + index.js export
-Auth state?            → useAuthStore() — never localStorage directly
-Colors/fonts?          → CSS variables in index.css — never hardcode
-Theme toggle?          → useThemeStore().toggleTheme()
-Language toggle?       → useLanguageStore().toggleLang()
-Toast notification?    → useToastStore().addToast(msg, type)
-HTTP call?             → axiosInstance — never raw fetch or axios
-RTL flex order?        → swap DOM order in JSX using lang === 'ar'
-RTL spacing?           → CSS logical properties — automatic
-Error message?         → appConfig.auth.messageKey — never hardcode 'message'
+New page?                → page + css + route + sidebar + locale keys + api (MOCK_ENABLED)
+List of records?         → DataTable (+ Pagination in footer, DropdownMenu in rowActions)
+Section container?       → Card (padding="none" around tables)
+Create / edit form?      → Drawer + field components
+Non-destructive dialog?  → Modal
+Delete / lock / release? → ConfirmDialog (requireText for irreversible)
+Pick one value?          → SelectField (few options as cards → RadioCardGroup)
+Pick many?               → SelectField multiple / TagInput for free text
+Numbers / runtimes?      → NumberField / DurationField (seconds)
+On/off setting?          → Toggle (layout="row")
+Long text?               → TextareaField
+AI prompt / chat input?  → PromptComposer
+Files?                   → UploadDropzone + FileItem
+Metadata?                → KeyValueList
+IDs / hashes?            → CopyableText
+Timestamps?              → RelativeTime
+Status?                  → StatusBadge (+ status.* key)
+Progress / budget?       → ProgressBar
+Loading?                 → Skeleton / DataTable loading / Spinner
+Feedback?                → useToastStore().addToast(msg, type)
+Hint on hover?           → Tooltip
+People?                  → Avatar / AvatarGroup
+Hierarchy trail?         → PageHeader breadcrumbs
+Auth state?              → useAuthStore()
+HTTP call?               → axiosInstance
+Language?                → appConfig.features.multiLanguage (EN-only)
 ```

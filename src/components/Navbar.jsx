@@ -32,7 +32,8 @@ export default function Navbar({ onToggleSidebar }) {
   const { t } = useTranslation()
   const { token, clearAuth } = useAuthStore()
   const { theme, toggleTheme } = useThemeStore()
-  const { lang, toggleLang } = useLanguageStore()
+  // const { lang, toggleLang } = useLanguageStore()
+  const { lang, toggleLang, isEnabled: isLangEnabled } = useLanguageStore()
 
   const isRTL = lang === 'ar'
 
@@ -106,33 +107,33 @@ export default function Navbar({ onToggleSidebar }) {
     <FormButton variant="primary" onClick={() => navigate('/login')}>{t('navbar.login')}</FormButton>
   )
 
-return (
-  <nav className="navbar" key={lang}>
-    {isRTL ? (
-      <>
-        <div className="navbar__actions">
-          {logoutBtn}
-          {themeBtn}
-          {langBtn}
-        </div>
-        <div className="navbar__left navbar__left--pushed">
-          {logo}
-          {hamburger}
-        </div>
-      </>
-    ) : (
-      <>
-        <div className="navbar__left">
-          {hamburger}
-          {logo}
-        </div>
-        <div className="navbar__actions">
-          {langBtn}
-          {themeBtn}
-          {logoutBtn}
-        </div>
-      </>
-    )}
-  </nav>
-)
+  return (
+    <nav className="navbar" key={lang}>
+      {isRTL ? (
+        <>
+          <div className="navbar__actions">
+            {logoutBtn}
+            {themeBtn}
+            {isLangEnabled && langBtn}
+          </div>
+          <div className="navbar__left navbar__left--pushed">
+            {logo}
+            {hamburger}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="navbar__left">
+            {hamburger}
+            {logo}
+          </div>
+          <div className="navbar__actions">
+            {isLangEnabled && langBtn}
+            {themeBtn}
+            {logoutBtn}
+          </div>
+        </>
+      )}
+    </nav>
+  )
 }
