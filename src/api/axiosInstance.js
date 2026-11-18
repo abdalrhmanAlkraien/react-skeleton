@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 
 const axiosInstance = axios.create({
@@ -7,27 +8,37 @@ const axiosInstance = axios.create({
   },
 })
 
-// Request interceptor — attach token to every request
+// Clerk token getter — registered by ClerkAxiosBridge
+let clerkTokenGetter = null
+
+export const setClerkTokenGetter = (getter) => {
+  clerkTokenGetter = getter
+}
+
+// Request interceptor — attach Clerk JWT automatically
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+  async (config) => {
+    if (clerkTokenGetter) {
+      const token = await clerkTokenGetter()
+
+      if (token) {
+        config.headers.set('Authorization', `Bearer ${token}`)
+      }
     }
+
     return config
   },
   (error) => Promise.reject(error)
 )
 
-// Response interceptor — handle expired token globally
+// Response interceptor — handle authentication errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+      console.warn('API authentication failed:', error.config?.url)
     }
+
     return Promise.reject(error)
   }
 )

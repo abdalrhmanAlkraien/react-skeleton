@@ -72,7 +72,11 @@
       "sign_in": "Sign in",
       "passwords_no_match": "Passwords do not match.",
       "success": "Registration successful!",
-      "failed": "Registration failed. Please try again."
+      "failed": "Registration failed. Please try again.",
+      "first_name": "First Name",
+      "first_name_placeholder": "Enter your first name",
+      "last_name": "Last Name",
+      "last_name_placeholder": "Enter your last name"
     }
   },
   "profile": {
@@ -134,7 +138,8 @@
   },
   "errors": {
     "login_failed": "Login failed. Please check your credentials.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "login_verification_required": "Additional verification is required to complete sign-in."
   },
   "not_found": {
     "title": "Page Not Found",
@@ -272,4 +277,5 @@
       "invited": "invited"
     }
   }
+  
 }

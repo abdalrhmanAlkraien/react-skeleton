@@ -4,6 +4,7 @@ import useAuthStore from '../store/authStore'
 import useThemeStore from '../store/useThemeStore'
 import useLanguageStore from '../store/useLanguageStore'
 import { FormButton } from './common'
+import { useAuth, useClerk } from '@clerk/react'
 import './styles/Navbar.css'
 
 const FLAGS = {
@@ -32,16 +33,22 @@ export default function Navbar({ onToggleSidebar }) {
   const { t } = useTranslation()
   const { token, clearAuth } = useAuthStore()
   const { theme, toggleTheme } = useThemeStore()
-  // const { lang, toggleLang } = useLanguageStore()
   const { lang, toggleLang, isEnabled: isLangEnabled } = useLanguageStore()
+  const { isLoaded, isSignedIn } = useAuth()
+  const { signOut } = useClerk()
+
 
   const isRTL = lang === 'ar'
 
   console.log('Navbar lang:', lang, 'isRTL:', isRTL)
 
-  const handleLogout = () => {
-    clearAuth()
-    navigate('/login')
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirectUrl: '/login' })
+      clearAuth()
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   const hamburger = (
@@ -101,10 +108,17 @@ export default function Navbar({ onToggleSidebar }) {
     </button>
   )
 
-  const logoutBtn = token ? (
-    <FormButton variant="outline" onClick={handleLogout}>{t('navbar.logout')}</FormButton>
+  const logoutBtn = !isLoaded ? null : isSignedIn ? (
+    <FormButton variant="outline" onClick={handleLogout}>
+      {t('navbar.logout')}
+    </FormButton>
   ) : (
-    <FormButton variant="primary" onClick={() => navigate('/login')}>{t('navbar.login')}</FormButton>
+    <FormButton
+      variant="primary"
+      onClick={() => navigate('/login')}
+    >
+      {t('navbar.login')}
+    </FormButton>
   )
 
   return (

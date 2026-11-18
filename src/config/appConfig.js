@@ -1,6 +1,6 @@
 const appConfig = {
   // Login field — choose one: 'email' | 'username' | 'phone'
-  loginIdentifier: 'username',
+  loginIdentifier: 'email',
 
   // Feature flags
   features: {

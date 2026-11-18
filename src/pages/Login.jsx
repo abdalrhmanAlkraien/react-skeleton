@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import appConfig from '../config/appConfig'
 import useAuthStore from '../store/authStore'
 import useThemeStore from '../store/useThemeStore'
-import { loginApi } from '../api/auth'
+import { useSignIn, useAuth } from '@clerk/react'
 import { FormButton, FormAlert } from '../components/common'
 import './styles/Login.css'
 
@@ -15,33 +15,129 @@ export default function Login() {
   const { theme, toggleTheme } = useThemeStore()
 
   const [identifier, setIdentifier] = useState('')
-  const [password, setPassword]     = useState('')
-  const [loading, setLoading]       = useState(false)
-  const [error, setError]           = useState('')
-  const [showPass, setShowPass]     = useState(false)
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [showPass, setShowPass] = useState(false)
+
+  const { signIn } = useSignIn()
+  const { isLoaded, isSignedIn } = useAuth()
+
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [isLoaded, isSignedIn, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
+
     try {
-      const res   = await loginApi({ [appConfig.loginIdentifier]: identifier, password })
-      const data  = res.data
-      setAuth(data[appConfig.auth.tokenKey], data[appConfig.auth.userKey])
-      navigate('/dashboard')
+      const { error: clerkError } = await signIn.password({
+        emailAddress: identifier,
+        password,
+      })
+
+      if (clerkError) {
+        setError(
+          clerkError.errors?.[0]?.longMessage ||
+          clerkError.errors?.[0]?.message ||
+          t('errors.login_failed')
+        )
+        return
+      }
+
+      if (signIn.status !== 'complete') {
+        setError(t('errors.login_verification_required'))
+        return
+      }
+
+      await signIn.finalize({
+        navigate: async ({ session }) => {
+          if (session?.currentTask) {
+            setError(t('errors.login_verification_required'))
+            return
+          }
+
+          // Session activation is complete here.
+          // Fetch the backend user using the Clerk session token.
+          const token = await session.getToken()
+
+          const response = await loginApi(token)
+          const user = response.data.user ?? response.data
+
+          setAuth(null, user)
+          navigate('/dashboard', { replace: true })
+        },
+      })
     } catch (err) {
       setError(
-        err.response?.data?.[appConfig.auth.messageKey] || t('errors.login_failed')
+        err.response?.data?.message ||
+        err.errors?.[0]?.longMessage ||
+        err.message ||
+        t('errors.login_failed')
       )
     } finally {
       setLoading(false)
     }
   }
 
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const { error } = await signIn.password({
+        emailAddress: identifier.trim(),
+        password,
+      })
+
+      if (error) {
+        console.error('Clerk login error:', error)
+        setError(error.message || 'Login failed')
+        return
+      }
+
+      console.log('Clerk sign-in status:', signIn.status)
+
+      if (signIn.status === 'complete') {
+        await signIn.finalize({
+          navigate: () => {
+            navigate('/dashboard', { replace: true })
+          },
+        })
+
+        return
+      }
+
+      if (signIn.status === 'needs_second_factor') {
+        setError('Two-factor authentication is required')
+        return
+      }
+
+      // if (signIn.status === 'needs_client_trust') {
+      //   setError('Device verification is required')
+      //   return
+      // }
+
+      setError(`Clerk sign-in status: ${signIn.status}`)
+    } catch (err) {
+      console.error('Login exception:', err)
+      setError(err.message || 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
   const identifierLabel = {
-    email:    t('auth.login.email_label'),
+    email: t('auth.login.email_label'),
     username: t('auth.login.username_label'),
-    phone:    t('auth.login.phone_label'),
+    phone: t('auth.login.phone_label'),
   }[appConfig.loginIdentifier]
 
   const identifierType = {
@@ -60,7 +156,7 @@ export default function Login() {
         <p className="auth-card__subtitle">{t('auth.login.subtitle')}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="auth-card__form">
+      <form onSubmit={handleLogin} className="auth-card__form">
 
         <div className="auth-field">
           <label className="auth-field__label">{identifierLabel}</label>
@@ -90,13 +186,13 @@ export default function Login() {
             <button type="button" className="auth-field__eye" onClick={() => setShowPass((p) => !p)} tabIndex={-1}>
               {showPass ? (
                 <svg viewBox="0 0 20 20" fill="none">
-                  <path d="M3 3l14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                  <path d="M10.477 6.535A4 4 0 0 1 14 10c0 .23-.02.454-.059.672M7.21 7.21A4 4 0 0 0 6 10a4 4 0 0 0 5.465 3.755M4.58 4.58C2.977 5.645 1.677 7.173 1 10c1.073 4.267 4.5 7 9 7a10.9 10.9 0 0 0 4.42-.92M8 2.07A10.9 10.9 0 0 1 10 2c4.5 0 7.927 2.733 9 7a10.94 10.94 0 0 1-1.585 3.41" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                  <path d="M3 3l14 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                  <path d="M10.477 6.535A4 4 0 0 1 14 10c0 .23-.02.454-.059.672M7.21 7.21A4 4 0 0 0 6 10a4 4 0 0 0 5.465 3.755M4.58 4.58C2.977 5.645 1.677 7.173 1 10c1.073 4.267 4.5 7 9 7a10.9 10.9 0 0 0 4.42-.92M8 2.07A10.9 10.9 0 0 1 10 2c4.5 0 7.927 2.733 9 7a10.94 10.94 0 0 1-1.585 3.41" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                 </svg>
               ) : (
                 <svg viewBox="0 0 20 20" fill="none">
-                  <path d="M1 10c1.073-4.267 4.5-7 9-7s7.927 2.733 9 7c-1.073 4.267-4.5 7-9 7s-7.927-2.733-9-7Z" stroke="currentColor" strokeWidth="1.4"/>
-                  <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.4"/>
+                  <path d="M1 10c1.073-4.267 4.5-7 9-7s7.927 2.733 9 7c-1.073 4.267-4.5 7-9 7s-7.927-2.733-9-7Z" stroke="currentColor" strokeWidth="1.4" />
+                  <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.4" />
                 </svg>
               )}
             </button>
@@ -122,19 +218,19 @@ export default function Login() {
         <button className="auth-card__theme-btn" onClick={toggleTheme}>
           {theme === 'dark' ? (
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/>
-              <line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/>
-              <line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
           ) : (
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           )}
           {theme === 'dark' ? t('auth.login.switch_light') : t('auth.login.switch_dark')}

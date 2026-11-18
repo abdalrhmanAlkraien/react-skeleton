@@ -3,18 +3,33 @@ import { useTranslation } from 'react-i18next'
 import { getProfileApi } from '../api/profile'
 import ProfileDrawer from '../components/profile/ProfileDrawer'
 import { PageHeader, FormButton, StatusBadge } from '../components/common'
+import { useAuth } from '@clerk/react'
 import './styles/Profile.css'
 
 export default function Profile() {
   const { t } = useTranslation()
-  const [profile, setProfile]       = useState(null)
+  const [profile, setProfile] = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { isLoaded, isSignedIn } = useAuth()
 
   useEffect(() => {
+    if (!isLoaded || !isSignedIn) return
+
     getProfileApi()
-      .then((res) => setProfile(res.data))
-      .catch(() => {})
-  }, [])
+      .then((res) => {
+        const user = res.data.user ?? res.data
+
+        setProfile({
+          ...user,
+          name: [user.firstName, user.lastName]
+            .filter(Boolean)
+            .join(' '),
+        })
+      })
+      .catch((error) => {
+        console.error('Failed to load profile:', error)
+      })
+  }, [isLoaded, isSignedIn])
 
   const handleSave = (updated) => {
     setProfile((prev) => ({ ...prev, ...updated }))

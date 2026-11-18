@@ -11,40 +11,64 @@ export default function Register() {
   const { t } = useTranslation()
 
   const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState('')
+  const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
   const [form, setForm] = useState({
-    fullName: '', username: '', email: '', phone: '', password: '', confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   })
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-    setError('')
+    const { name, value } = e.target
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
   }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
-    setSuccess('')
+
     if (form.password !== form.confirmPassword) {
-      setError(t('auth.register.passwords_no_match'))
+      setError(t('errors.password_mismatch'))
       return
     }
+
+    if (form.password.length < 10 || form.password.length > 128) {
+      setError(t('errors.password_length'))
+      return
+    }
+
     setLoading(true)
+
     try {
-      const res = await registerApi({
-        fullName: form.fullName, username: form.username,
-        email: form.email, phone: form.phone, password: form.password,
+      await registerApi({
+        email: form.email.trim(),
+        password: form.password,
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
       })
-      setSuccess(res.data?.[appConfig.auth.messageKey] || t('auth.register.success'))
-      setTimeout(() => navigate('/login'), 1500)
+
+      navigate('/login', { replace: true })
     } catch (err) {
-      setError(err.response?.data?.[appConfig.auth.messageKey] || t('auth.register.failed'))
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        t('errors.registration_failed')
+      )
     } finally {
       setLoading(false)
     }
   }
+
+
 
   return (
     <div className="auth-card auth-card--wide">
@@ -54,61 +78,110 @@ export default function Register() {
       </div>
 
       <div className="auth-card__heading">
-        <h1 className="auth-card__title">{t('auth.register.title')}</h1>
-        <p className="auth-card__subtitle">{t('auth.register.subtitle')}</p>
+        <h1 className="auth-card__title">
+          {t('auth.register.title')}
+        </h1>
+        <p className="auth-card__subtitle">
+          {t('auth.register.subtitle')}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="auth-card__form">
 
+        {/* First Name / Last Name */}
         <div className="auth-grid">
           <div className="auth-field">
-            <label className="auth-field__label">{t('auth.register.full_name')}</label>
-            <input className="auth-field__input" type="text" name="fullName"
-              placeholder={t('auth.register.full_name_placeholder')}
-              value={form.fullName} onChange={handleChange} required />
+            <label className="auth-field__label">
+              {t('auth.register.first_name')}
+            </label>
+            <input
+              className="auth-field__input"
+              type="text"
+              name="firstName"
+              placeholder={t('auth.register.first_name_placeholder')}
+              value={form.firstName}
+              onChange={handleChange}
+            />
           </div>
+
           <div className="auth-field">
-            <label className="auth-field__label">{t('auth.register.username')}</label>
-            <input className="auth-field__input" type="text" name="username"
-              placeholder={t('auth.register.username_placeholder')}
-              value={form.username} onChange={handleChange} required />
+            <label className="auth-field__label">
+              {t('auth.register.last_name')}
+            </label>
+            <input
+              className="auth-field__input"
+              type="text"
+              name="lastName"
+              placeholder={t('auth.register.last_name_placeholder')}
+              value={form.lastName}
+              onChange={handleChange}
+            />
           </div>
         </div>
 
-        <div className="auth-grid">
-          <div className="auth-field">
-            <label className="auth-field__label">{t('auth.register.email')}</label>
-            <input className="auth-field__input" type="email" name="email"
-              placeholder={t('auth.register.email_placeholder')}
-              value={form.email} onChange={handleChange} required />
-          </div>
-          <div className="auth-field">
-            <label className="auth-field__label">{t('auth.register.phone')}</label>
-            <input className="auth-field__input" type="tel" name="phone"
-              placeholder={t('auth.register.phone_placeholder')}
-              value={form.phone} onChange={handleChange} required />
-          </div>
+        {/* Email */}
+        <div className="auth-field">
+          <label className="auth-field__label">
+            {t('auth.register.email')}
+          </label>
+          <input
+            className="auth-field__input"
+            type="email"
+            name="email"
+            placeholder={t('auth.register.email_placeholder')}
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
         </div>
 
+        {/* Password / Confirm Password */}
         <div className="auth-grid">
           <div className="auth-field">
-            <label className="auth-field__label">{t('auth.register.password')}</label>
-            <input className="auth-field__input" type="password" name="password"
+            <label className="auth-field__label">
+              {t('auth.register.password')}
+            </label>
+            <input
+              className="auth-field__input"
+              type="password"
+              name="password"
               placeholder={t('auth.register.password_placeholder')}
-              value={form.password} onChange={handleChange} required minLength={8} />
+              value={form.password}
+              onChange={handleChange}
+              required
+              minLength={10}
+              maxLength={128}
+            />
           </div>
+
           <div className="auth-field">
-            <label className="auth-field__label">{t('auth.register.confirm_password')}</label>
-            <input className="auth-field__input" type="password" name="confirmPassword"
+            <label className="auth-field__label">
+              {t('auth.register.confirm_password')}
+            </label>
+            <input
+              className="auth-field__input"
+              type="password"
+              name="confirmPassword"
               placeholder={t('auth.register.confirm_password_placeholder')}
-              value={form.confirmPassword} onChange={handleChange} required />
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+              minLength={10}
+              maxLength={128}
+            />
           </div>
         </div>
 
-        <FormAlert type="error"   message={error}   />
+        <FormAlert type="error" message={error} />
         <FormAlert type="success" message={success} />
 
-        <FormButton type="submit" variant="primary" loading={loading} loadingText={t('auth.register.submitting')} fullWidth>
+        <FormButton
+          type="submit"
+          variant="primary"
+          loading={loading}
+          loadingText={t('auth.register.submitting')}
+          fullWidth
+        >
           {t('auth.register.submit')}
         </FormButton>
 
@@ -116,7 +189,10 @@ export default function Register() {
 
       <p className="auth-card__footer">
         {t('auth.register.has_account')}{' '}
-        <span className="auth-card__footer-link" onClick={() => navigate('/login')}>
+        <span
+          className="auth-card__footer-link"
+          onClick={() => navigate('/login')}
+        >
           {t('auth.register.sign_in')}
         </span>
       </p>
